@@ -239,7 +239,7 @@ body { padding: 10px; }
 const data = {
 "Control Xbox One (Fat/S/X)":[
     ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
-    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Cambio de microswitch LB o RB", 250, "20 Min"],
     ["Cambio de Botón LB/RB (Bumper)", 200, "20 Min"],
     ["Mantenimiento Completo y Limpieza", 150, "30 Min"],
     ["Cambio de Puerto de Carga Micro-USB", 250, "40 Min"],
@@ -250,7 +250,7 @@ const data = {
     ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
     ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
     ["Cambio de Botón LB/RB (Bumper)", 250, "20 Min"],
-    ["Mantenimiento Completo y Limpieza", 200, "30 Min"],
+    ["Mantenimiento Limpieza", 50, "15 Min"],
     ["Cambio de Puerto de Carga Tipo-C", 300, "40 Min"],
     ["Problema de Sincronización / Bluetooth", 450, "1 a 2 días"]
 ],
@@ -291,7 +291,6 @@ const data = {
 ]
 };
 
-// Mapeo exacto de las imágenes subidas en el repositorio
 const imagenes = {
 "Control Xbox One (Fat/S/X)":"xbox-one.png",
 "Control Xbox Series (S/X)":"xbox-series.png",
@@ -299,7 +298,7 @@ const imagenes = {
 "Control PS4 (DualShock 4)":"dualshock-4.png",
 "Control PS5 DualSense / Edge":"dualsense-edge.png",
 "Nintendo Switch (Joy-Con)":"joycon.png",
-"Nintendo Switch Pro Controller":"xbox-series.png" // Reutiliza o cambia si subes pro.png
+"Nintendo Switch Pro Controller":"xbox-series.png"
 }; 
 
 let m=document.getElementById("mando");
@@ -315,7 +314,6 @@ Object.keys(data).forEach(x=>{
 loadServices();
 
 function loadServices(){
-    // Animación de cambio de imagen exacta como en las consolas
     const targetImg = document.getElementById("mandoImg");
     targetImg.style.opacity = 0;
     targetImg.style.transform = "scale(0.9)";
