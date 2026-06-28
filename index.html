@@ -61,6 +61,34 @@ margin:auto;
 filter:drop-shadow(0 6px 20px rgba(0, 114, 255, 0.3)); 
 }
 
+/* CONTENEDOR DE CONTROL CON RESPLANDOR NEÓN CIAN */
+.console-box{ 
+display:flex; 
+justify-content:center; 
+margin:25px auto; 
+background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0,0,0,0) 70%);
+padding: 20px;
+border-radius: 24px;
+width: 320px;
+height: 320px;
+align-items: center;
+border: 1px solid rgba(0, 242, 254, 0.15);
+box-shadow: 0 0 35px rgba(0, 242, 254, 0.08);
+transition: all 0.5s ease;
+} 
+
+.console-box img{ 
+width:260px; 
+max-width:100%; 
+transition: all 0.35s ease; 
+filter:drop-shadow(0 15px 25px rgba(0,0,0,0.8)); 
+} 
+
+.console-box:hover {
+border-color: rgba(0, 242, 254, 0.3);
+box-shadow: 0 0 45px rgba(0, 242, 254, 0.15);
+}
+
 .card{
 background: linear-gradient(135deg, rgba(20, 20, 25, 0.85) 0%, rgba(10, 10, 12, 0.95) 100%);
 backdrop-filter: blur(20px);
@@ -154,6 +182,8 @@ align-items: center;
 @media(max-width: 600px){
 body { padding: 10px; }
 .card { padding: 20px; }
+.console-box { width: 240px; height: 240px; }
+.console-box img { width: 190px; }
 .top-bar { display: none; }
 }
 </style>
@@ -176,11 +206,12 @@ body { padding: 10px; }
 
 <div class="logo"> 
     <img src="logo.png" class="logo-img"> 
+    <div class="console-box"> 
+        <img id="mandoImg" src="xbox-one.png"> 
+    </div>
 </div>
 
 <div class="card">
-<h2 style="text-align: center; margin-top: 0; color: white; font-size: 18px; letter-spacing: 1px; text-transform: uppercase;">Cotizador de Controles</h2>
-
 <label>Modelo de Control</label>
 <select id="mando" onchange="loadServices()"></select>
 
@@ -191,7 +222,7 @@ body { padding: 10px; }
 <input id="cliente" placeholder="Tu nombre">
 
 <label>Notas adicionales</label>
-<textarea id="obs" rows="3" placeholder="Ej: El joystick izquierdo se mueve solo hacia arriba..."></textarea>
+<textarea id="obs" rows="3" placeholder="Ej: El joystick izquierdo se mueve solo..."></textarea>
 
 <div class="result">
 💰 Precio: <span id="precio">$0</span><br style="content: ''; margin-bottom: 6px; display: block;">
@@ -207,46 +238,69 @@ body { padding: 10px; }
 <script>
 const data = {
 "Control Xbox One (Fat/S/X)":[
-    ["Cambio de Potenciómetro (Drift)", 350, "40 Min"],
-    ["Cambio de Botón LB/RB (Bumper)", 250, "20 Min"],
-    ["Mantenimiento Completo y Limpieza", 200, "30 Min"],
-    ["Cambio de Puerto de Carga Micro-USB", 300, "40 Min"],
-    ["Falla de Encendido / Corto", 450, "1 a 2 días"],
-    ["Cambio de Gomas Conductoras", 200, "20 Min"]
+    ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
+    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Cambio de Botón LB/RB (Bumper)", 200, "20 Min"],
+    ["Mantenimiento Completo y Limpieza", 150, "30 Min"],
+    ["Cambio de Puerto de Carga Micro-USB", 250, "40 Min"],
+    ["Falla de Encendido / Corto", 400, "1 a 2 días"],
+    ["Cambio de Gomas Conductoras", 150, "20 Min"]
 ],
 "Control Xbox Series (S/X)":[
-    ["Cambio de Potenciómetro (Drift)", 400, "40 Min"],
-    ["Cambio de Botón LB/RB (Bumper)", 300, "20 Min"],
-    ["Mantenimiento Completo y Limpieza", 250, "30 Min"],
-    ["Cambio de Puerto de Carga Tipo-C", 350, "40 Min"],
-    ["Problema de Sincronización / Bluetooth", 500, "1 a 2 días"]
+    ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
+    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Cambio de Botón LB/RB (Bumper)", 250, "20 Min"],
+    ["Mantenimiento Completo y Limpieza", 200, "30 Min"],
+    ["Cambio de Puerto de Carga Tipo-C", 300, "40 Min"],
+    ["Problema de Sincronización / Bluetooth", 450, "1 a 2 días"]
+],
+"Control Xbox Elite Series 2":[
+    ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
+    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Cambio de Botón LB/RB (Bumper)", 250, "20 Min"],
+    ["Mantenimiento Completo y Limpieza", 200, "30 Min"],
+    ["Falla en Palancas Traseras (Paddles)", 300, "40 Min"]
 ],
 "Control PS4 (DualShock 4)":[
-    ["Cambio de Potenciómetro (Drift)", 350, "40 Min"],
-    ["Cambio de Puerto de Carga + Pinza", 250, "20 Min"],
-    ["Mantenimiento Completo y Limpieza", 200, "30 Min"],
-    ["Cambio de Flex de Botones", 200, "20 Min"],
-    ["Cambio de Batería", 300, "15 Min"]
+    ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
+    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Cambio de Puerto de Carga + Placa", 200, "20 Min"],
+    ["Mantenimiento Completo y Limpieza", 150, "30 Min"],
+    ["Cambio de Flex de Botones", 150, "20 Min"],
+    ["Cambio de Batería", 250, "15 Min"]
 ],
-"Control PS5 (DualSense)":[
-    ["Cambio de Potenciómetro (Drift)", 450, "45 Min"],
-    ["Reparación de Gatillos Adaptativos", 400, "1 Hora"],
-    ["Mantenimiento Completo y Limpieza", 300, "40 Min"],
-    ["Cambio de Puerto de Carga Tipo-C", 400, "40 Min"],
-    ["Falla de Encendido / Chip de Carga", 600, "1 a 2 días"]
+"Control PS5 DualSense / Edge":[
+    ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
+    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Reparación de Gatillos Adaptativos", 350, "1 Hora"],
+    ["Mantenimiento Completo y Limpieza", 250, "40 Min"],
+    ["Cambio de Puerto de Carga Tipo-C", 350, "40 Min"],
+    ["Falla de Encendido / Chip de Carga", 550, "1 a 2 días"]
 ],
 "Nintendo Switch (Joy-Con)":[
-    ["Cambio de Palanca Completa (Drift)", 250, "20 Min"],
-    ["Cambio de Riel de Conexión", 250, "20 Min"],
-    ["Cambio de Hebilla de Bloqueo (Metal)", 200, "15 Min"],
-    ["Mantenimiento Individual", 150, "20 Min"]
+    ["Cambio de Palanca Completa (Drift)", 200, "20 Min"],
+    ["Cambio de Riel de Conexión", 200, "20 Min"],
+    ["Cambio de Hebilla de Bloqueo (Metal)", 150, "15 Min"],
+    ["Mantenimiento Individual", 100, "20 Min"]
 ],
 "Nintendo Switch Pro Controller":[
-    ["Cambio de Potenciómetro (Drift)", 400, "40 Min"],
-    ["Mantenimiento Completo y Limpieza", 250, "30 Min"],
-    ["Cambio de Puerto Tipo-C", 350, "40 Min"]
+    ["Cambio de Potenciómetro (Drift)", 300, "40 Min"],
+    ["Cambio de Joystick TMR (Magnético)", 450, "45 Min"],
+    ["Mantenimiento Completo y Limpieza", 200, "30 Min"],
+    ["Cambio de Puerto Tipo-C", 300, "40 Min"]
 ]
 };
+
+// Mapeo exacto de las imágenes subidas en el repositorio
+const imagenes = {
+"Control Xbox One (Fat/S/X)":"xbox-one.png",
+"Control Xbox Series (S/X)":"xbox-series.png",
+"Control Xbox Elite Series 2":"elite-series-2.png",
+"Control PS4 (DualShock 4)":"dualshock-4.png",
+"Control PS5 DualSense / Edge":"dualsense-edge.png",
+"Nintendo Switch (Joy-Con)":"joycon.png",
+"Nintendo Switch Pro Controller":"xbox-series.png" // Reutiliza o cambia si subes pro.png
+}; 
 
 let m=document.getElementById("mando");
 let s=document.getElementById("servicio");
@@ -261,6 +315,16 @@ Object.keys(data).forEach(x=>{
 loadServices();
 
 function loadServices(){
+    // Animación de cambio de imagen exacta como en las consolas
+    const targetImg = document.getElementById("mandoImg");
+    targetImg.style.opacity = 0;
+    targetImg.style.transform = "scale(0.9)";
+    setTimeout(() => {
+        targetImg.src=imagenes[m.value]; 
+        targetImg.style.opacity = 1;
+        targetImg.style.transform = "scale(1)";
+    }, 150);
+
     s.innerHTML="";
     data[m.value].forEach(x=>{
         let o=document.createElement("option");
