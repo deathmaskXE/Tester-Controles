@@ -252,7 +252,6 @@ align-items: center;
     touch-action: manipulation;
 }
 
-/* Estilos de trazado idénticos al croquis lineal */
 .control-contour {
     fill: none;
     stroke: rgba(226, 232, 240, 0.2);
@@ -396,7 +395,6 @@ align-items: center;
 </div>
 
 <script>
-// Data saneada y sin los textos innecesarios de microelectrónica pesada
 const data = {
 "Control Xbox One (Fat/S/X)":[
     ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
@@ -492,6 +490,7 @@ let precioElement = document.getElementById("precio");
 let tiempoElement = document.getElementById("tiempo");
 let totalElement = document.getElementById("total");
 
+// Llenar select con los modelos disponibles
 Object.keys(data).forEach(x=>{
     let o=document.createElement("option");
     o.value=x;
@@ -501,68 +500,4 @@ Object.keys(data).forEach(x=>{
 
 function loadServices() {
     const modeloSeleccionado = m.value;
-    document.getElementById("mandoImg").src = imagenes[modeloSeleccionado] || "xbox-one.png";
-    containerServicios.innerHTML = "";
-    
-    if(!data[modeloSeleccionado]) return;
-    
-    data[modeloSeleccionado].forEach((servicio, index) => {
-        const div = document.createElement("div");
-        div.className = "service-item";
-        
-        const chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.id = `serv_${index}`;
-        chk.dataset.precio = servicio[1];
-        chk.dataset.tiempo = servicio[2];
-        chk.dataset.tags = servicio[3] || "";
-        chk.dataset.name = servicio[0];
-        chk.onchange = calculateTotal;
-        
-        const details = document.createElement("div");
-        details.className = "service-details";
-        
-        const nameSpan = document.createElement("span");
-        nameSpan.className = "service-name";
-        nameSpan.textContent = servicio[0];
-        
-        const priceSpan = document.createElement("span");
-        priceSpan.className = "service-price";
-        priceSpan.textContent = `$${servicio[1]}`;
-        
-        details.appendChild(nameSpan);
-        details.appendChild(priceSpan);
-        div.appendChild(chk);
-        div.appendChild(details);
-        
-        div.onclick = (e) => {
-            if(e.target !== chk) {
-                chk.checked = !chk.checked;
-                calculateTotal();
-            }
-        };
-        
-        containerServicios.appendChild(div);
-    });
-    
-    calculateTotal();
-}
-
-function calculateTotal() {
-    let subtotal = 0;
-    let minutosTotales = 0;
-    let horasTotales = 0;
-    let serviciosSeleccionadosTags = [];
-    
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
-    let countChecked = 0;
-
-    checkboxes.forEach(chk => {
-        if(chk.checked) {
-            countChecked++;
-            subtotal += parseFloat(chk.dataset.precio);
-            
-            const tiempoStr = chk.dataset.tiempo;
-            if(tiempoStr.includes("min")) {
-                minutosTotales += parseInt(tiempoStr);
-            } e
+    document.getElementById("mandoImg").src = imagenes
