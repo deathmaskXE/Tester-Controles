@@ -344,7 +344,7 @@ const imagenes = {
 "Control Xbox Series (S/X)":"xbox-series.png",
 "Control Xbox Elite Series 2":"elite-series-2.png",
 "Control PS4 (DualShock 4)":"dualshock-4.png",
-"Control PS5 DualSense":"dualsense-edge.png",
+"Control PS5 DualSense":"dualsense.png", // <--- Corregido para que apunte a tu nueva imagen
 "Control PS5 DualSense Edge":"dualsense-edge.png",
 "Nintendo Switch (Joy-Con)":"joycon.png",
 "Nintendo Switch Pro Controller":"pro-controller.png"
@@ -391,7 +391,6 @@ function calc(){
     }
 }
 
-// Envío limpio estructurado para WhatsApp
 function sendWA(){
     let msg=`🎮 XE SERVICIO ELECTRÓNICO\n🕹 COTIZACIÓN DE CONTROL\n\n👤 Cliente: ${cliente.value}\n🎮 Mando: ${m.value}\n🔧 Falla: ${s.value}\n\n💰 Costo: ${total.innerText}\n⏱ Tiempo: ${tiempo.innerText}\n\n📝 Notas: ${obs.value}`;
     window.open("https://wa.me/527471731852?text="+encodeURIComponent(msg));
