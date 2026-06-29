@@ -250,15 +250,15 @@ align-items: center;
     height: auto;
     margin: auto;
     position: relative;
-    touch-action: manipulation; /* Optimiza toques en smartphones */
+    touch-action: manipulation;
 }
 
 .hotspot {
     fill: rgba(0, 242, 254, 0.04);
-    stroke: rgba(0, 242, 254, 0.3);
+    stroke: rgba(0, 242, 254, 0.35);
     stroke-width: 1.8;
     cursor: pointer;
-    pointer-events: auto; /* Asegura captura de eventos touch */
+    pointer-events: auto;
     transition: all 0.2s ease;
 }
 
@@ -332,7 +332,6 @@ align-items: center;
 <label>Modelo de Control</label>
 <select id="mando" onchange="loadServices()"></select>
 
-<!-- MAPA INTERACTIVO DE EXPLOSIÓN DE PIEZAS -->
 <label>🗺️ Diagnóstico Visual (Toca la pieza dañada)</label>
 <div class="interactive-viewer-box">
     <div class="svg-viewport-wrapper" id="svgInteractiveContainer"></div>
@@ -479,25 +478,25 @@ const imagenes = {
 }; 
 
 const HOTSPOT_META_INFO = {
-    "joystick_izq": { name: "Joystick Izquierdo", desc: "Mecanismo analógico completo. Corrige desviaciones no deseadas o tirones en el juego." },
-    "joystick_der": { name: "Joystick Derecho", desc: "Mecanismo analógico completo. Restaura el centrado y suavidad de la cámara de juego." },
-    "potenciometro_izq": { name: "Potenciómetro Izquierdo", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y izquierdo." },
-    "potenciometro_der": { name: "Potenciómetro Derecho", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y derecho." },
-    "puerto_usbc": { name: "Puerto de Carga / USB-C", desc: "Puerto físico reforzado. Elimina falsos contactos al energizar o sincronizar el control." },
-    "dpad": { name: "D-Pad (Cruceta)", desc: "Domos de contacto y cruceta direccional mecánica para una precisión perfecta por pulsación." },
-    "botones_action": { name: "Botones Principales", desc: "Puntos de contacto frontales (A,B,X,Y / Figuras). Resuelve botones pegados o rotos." },
-    "lb_l1": { name: "Bumper / Interruptor L1-LB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
-    "rb_r1": { name: "Bumper / Interruptor R1-RB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
-    "lt_l2": { name: "Gatillo Lineal L2-LT", desc: "Sensor magnético de recorrido lineal o potenciómetro mecánico según la arquitectura del mando." },
-    "rt_r2": { name: "Gatillo Lineal R2-RT", desc: "Sensor magnético de recorrido lineal o potenciómetro mecánico según la arquitectura del mando." },
-    "home_btn": { name: "Botón Home / Guía", desc: "Módulo central de encendido e iluminación LED decorativa o indicadora." },
-    "touchpad": { name: "Panel Touchpad Central", desc: "Superficie táctil digital capacitiva y flex conector intermedio exclusivo de Sony." },
-    "bateria": { name: "Batería / Gestión de Energía", desc: "Celda de Litio recargable o pines estructurales de alimentación primaria." },
-    "actuador_haptico": { name: "Actuador Háptico HD", desc: "Motores avanzados de vibración de bobina por software lineal de alta fidelidad." },
-    "motor_gatillo_l2": { name: "Motor Adaptativo Izquierdo", desc: "Engranaje interno y motor de fuerza variable para simular tensión real en el gatillo." },
-    "motor_gatillo_r2": { name: "Motor Adaptativo Derecho", desc: "Engranaje interno y motor de fuerza variable para simular tensión real en el gatillo." },
-    "membrana": { name: "Membrana de Silicón Conductivo", desc: "Almohadillas elásticas intermedias que devuelven el rebote físico original de los botones." },
-    "flex_principal": { name: "Placa Base / Flex Principal", desc: "Estructura interna, circuitos lógicos integrados, PMIC y líneas de datos generales." }
+    "joystick_izq": { name: "Joystick Izquierdo", desc: "Palanca analógica física. Corrige desvíos repentinos de dirección o movimientos fantasma (Drift) en la partida." },
+    "joystick_der": { name: "Joystick Derecho", desc: "Palanca analógica física. Soluciona fallos de centrado brusco y falta de fluidez en la cámara de juego." },
+    "potenciometro_izq": { name: "Potenciómetro Izquierdo", desc: "Sensores cilíndricos internos encargados de medir milimétricamente las coordenadas de movimiento del eje izquierdo." },
+    "potenciometro_der": { name: "Potenciómetro Derecho", desc: "Sensores cilíndricos internos encargados de medir milimétricamente las coordenadas de movimiento del eje derecho." },
+    "puerto_usbc": { name: "Puerto de Carga (USB / V8)", desc: "Entrada central de alimentación eléctrica. Elimina las desconexiones intermitentes al conectar el cable." },
+    "dpad": { name: "Cruceta de Dirección (D-Pad)", desc: "Cruceta direccional y domos de pulsación mecánica para asegurar marcas exactas de movimiento." },
+    "botones_action": { name: "Botones Principales Frontales", desc: "Grupeta de acción delantera (A,B,X,Y / Figuras). Resuelve botones atascados o sin respuesta." },
+    "lb_l1": { name: "Botón Superior / Bumper L1-LB", desc: "Mecanismo superior de activación rápida. Devuelve el clic firme y reactivo por pulsación." },
+    "rb_r1": { name: "Botón Superior / Bumper R1-RB", desc: "Mecanismo superior de activación rápida. Devuelve el clic firme y reactivo por pulsación." },
+    "lt_l2": { name: "Gatillo de Recorrido L2-LT", desc: "Mecanismo lineal de aceleración o apuntado continuo basado en sensores magnéticos o potenciómetros." },
+    "rt_r2": { name: "Gatillo de Recorrido R2-RT", desc: "Mecanismo lineal de aceleración o apuntado continuo basado en sensores magnéticos o potenciómetros." },
+    "home_btn": { name: "Botón Home / Encendido", desc: "Módulo de activación principal, emparejamiento inalámbrico y distribución de la iluminación LED." },
+    "touchpad": { name: "Superficie Táctil Touchpad", desc: "Panel capacitivo superior de lectura táctil y flex interno de comunicación." },
+    "bateria": { name: "Batería / Alimentación", desc: "Módulo de almacenamiento de energía portátil o terminales de distribución de carga en la placa base." },
+    "actuador_haptico": { name: "Actuadores Hápticos HD", desc: "Motores de vibración sutil capaces de reproducir efectos dinámicos en tiempo real según el videojuego." },
+    "motor_gatillo_l2": { name: "Motor de Gatillo Adaptativo L2", desc: "Estructura de engranajes y fuerza asistida para oponer resistencia mecánica real en el gatillo izquierdo." },
+    "motor_gatillo_r2": { name: "Motor de Gatillo Adaptativo R2", desc: "Estructura de engranajes y fuerza asistida para oponer resistencia mecánica real en el gatillo derecho." },
+    "membrana": { name: "Almohadillas de Silicón Conductor", desc: "Gomas conductivas intermedias dañadas por uso continuo. Devuelven el tacto elástico de fábrica." },
+    "flex_principal": { name: "Placa Lógica / Circuitos Integrados", desc: "Matriz conductora electrónica general, controladores integrados y distribución de voltajes internos." }
 };
 
 let m=document.getElementById("mando");
@@ -505,260 +504,8 @@ let containerServicios=document.getElementById("serviciosContainer");
 let descuentoRow=document.getElementById("descuentoRow");
 let descuentoMonto=document.getElementById("descuentoMonto");
 
-// Capturando elementos de texto que faltaban por ID en tu código original
 let precioElement = document.getElementById("precio");
 let tiempoElement = document.getElementById("tiempo");
 let totalElement = document.getElementById("total");
 
-let promoAplicadaText = "";
-
-Object.keys(data).forEach(x=>{
-    let o=document.createElement("option");
-    o.value=x;
-    o.textContent=x;
-    m.appendChild(o);
-});
-
-loadServices();
-
-function getControllerSVG(model) {
-    if (model.includes("Xbox Series") || model.includes("Elite")) {
-        return `
-        <svg viewBox="0 0 400 280" class="svg-controller-container">
-            <path d="M60,100 Q40,210 100,250 Q130,260 200,260 Q270,260 300,250 Q360,210 340,100 Q310,60 200,60 Q90,60 60,100 Z" fill="#0d0f16" stroke="rgba(0, 242, 254, 0.2)" stroke-width="2"/>
-            <circle cx="120" cy="115" r="24" class="hotspot" data-hotspot="joystick_izq"/>
-            <circle cx="120" cy="115" r="14" class="hotspot" data-hotspot="potenciometro_izq"/>
-            <circle cx="260" cy="165" r="24" class="hotspot" data-hotspot="joystick_der"/>
-            <circle cx="260" cy="165" r="14" class="hotspot" data-hotspot="potenciometro_der"/>
-            <rect x="155" y="155" width="35" height="35" rx="5" class="hotspot" data-hotspot="dpad"/>
-            <circle cx="295" cy="105" r="22" class="hotspot" data-hotspot="botones_action"/>
-            <path d="M80,55 Q130,48 175,58 L175,68 Q130,58 80,67 Z" class="hotspot" data-hotspot="lb_l1"/>
-            <path d="M320,55 Q270,48 225,58 L225,68 Q270,58 320,67 Z" class="hotspot" data-hotspot="rb_r1"/>
-            <path d="M65,40 Q110,35 155,42 L155,50 Q110,42 65,48 Z" class="hotspot" data-hotspot="lt_l2"/>
-            <path d="M335,40 Q290,35 245,42 L245,50 Q290,42 335,48 Z" class="hotspot" data-hotspot="rt_r2"/>
-            <rect x="185" y="42" width="30" height="12" rx="3" class="hotspot" data-hotspot="puerto_usbc"/>
-            <circle cx="200" cy="105" r="12" class="hotspot" data-hotspot="home_btn"/>
-            <rect x="180" y="210" width="40" height="25" rx="4" class="hotspot" data-hotspot="bateria"/>
-        </svg>`;
-    }
-    if (model.includes("Xbox One")) {
-        return `
-        <svg viewBox="0 0 400 280" class="svg-controller-container">
-            <path d="M60,100 Q40,210 100,250 Q130,260 200,260 Q270,260 300,250 Q360,210 340,100 Q310,60 200,60 Q90,60 60,100 Z" fill="#0d0f16" stroke="rgba(0, 242, 254, 0.2)" stroke-width="2"/>
-            <circle cx="120" cy="115" r="24" class="hotspot" data-hotspot="joystick_izq"/>
-            <circle cx="260" cy="165" r="24" class="hotspot" data-hotspot="joystick_der"/>
-            <rect x="155" y="155" width="35" height="35" rx="5" class="hotspot" data-hotspot="dpad"/>
-            <circle cx="295" cy="105" r="22" class="hotspot" data-hotspot="botones_action"/>
-            <path d="M80,55 Q130,48 175,58 L175,68 Q130,58 80,67 Z" class="hotspot" data-hotspot="lb_l1"/>
-            <path d="M320,55 Q270,48 225,58 L225,68 Q270,58 320,67 Z" class="hotspot" data-hotspot="rb_r1"/>
-            <path d="M65,40 Q110,35 155,42 L155,50 Q110,42 65,48 Z" class="hotspot" data-hotspot="lt_l2"/>
-            <path d="M335,40 Q290,35 245,42 L245,50 Q290,42 335,48 Z" class="hotspot" data-hotspot="rt_r2"/>
-            <rect x="185" y="42" width="30" height="12" rx="3" class="hotspot" data-hotspot="puerto_usbc"/>
-            <circle cx="200" cy="105" r="12" class="hotspot" data-hotspot="home_btn"/>
-        </svg>`;
-    }
-    if (model.includes("PS5") || model.includes("DualSense")) {
-        return `
-        <svg viewBox="0 0 400 280" class="svg-controller-container">
-            <path d="M70,100 Q50,220 105,250 Q140,230 200,230 Q260,230 295,250 Q350,220 330,100 Q300,70 200,70 Q100,70 70,100 Z" fill="#0d0f16" stroke="rgba(0, 242, 254, 0.2)" stroke-width="2"/>
-            <path d="M140,78 L260,78 L245,120 L155,120 Z" class="hotspot" data-hotspot="touchpad"/>
-            <circle cx="155" cy="165" r="22" class="hotspot" data-hotspot="joystick_izq"/>
-            <circle cx="245" cy="165" r="22" class="hotspot" data-hotspot="joystick_der"/>
-            <circle cx="105" cy="125" r="20" class="hotspot" data-hotspot="dpad"/>
-            <circle cx="295" cy="125" r="20" class="hotspot" data-hotspot="botones_action"/>
-            <rect x="185" y="55" width="30" height="12" rx="3" class="hotspot" data-hotspot="puerto_usbc"/>
-            <path d="M85,60 Q130,52 170,62 L170,70 Q130,60 85,68 Z" class="hotspot" data-hotspot="lb_l1"/>
-            <path d="M315,60 Q270,52 230,62 L230,70 Q270,60 315,68 Z" class="hotspot" data-hotspot="rb_r1"/>
-            <path d="M75,42 Q120,35 160,45 L160,52 Q120,45 75,52 Z" class="hotspot" data-hotspot="lt_l2"/>
-            <path d="M325,42 Q280,35 240,45 L240,52 Q280,45 325,52 Z" class="hotspot" data-hotspot="rt_r2"/>
-            <circle cx="105" cy="200" r="14" class="hotspot" data-hotspot="actuador_haptico"/>
-            <circle cx="295" cy="200" r="14" class="hotspot" data-hotspot="actuador_haptico"/>
-            <rect x="135" y="48" width="20" height="15" rx="2" class="hotspot" data-hotspot="motor_gatillo_l2"/>
-            <rect x="245" y="48" width="20" height="15" rx="2" class="hotspot" data-hotspot="motor_gatillo_r2"/>
-        </svg>`;
-    }
-    if (model.includes("PS4") || model.includes("DualShock")) {
-        return `
-        <svg viewBox="0 0 400 280" class="svg-controller-container">
-            <path d="M70,100 Q50,220 105,250 Q140,230 200,230 Q260,230 295,250 Q350,220 330,100 Q300,70 200,70 Q100,70 70,100 Z" fill="#0d0f16" stroke="rgba(0, 242, 254, 0.2)" stroke-width="2"/>
-            <path d="M140,78 L260,78 L245,120 L155,120 Z" class="hotspot" data-hotspot="touchpad"/>
-            <circle cx="155" cy="165" r="22" class="hotspot" data-hotspot="joystick_izq"/>
-            <circle cx="245" cy="165" r="22" class="hotspot" data-hotspot="joystick_der"/>
-            <circle cx="105" cy="125" r="20" class="hotspot" data-hotspot="dpad"/>
-            <circle cx="295" cy="125" r="20" class="hotspot" data-hotspot="botones_action"/>
-            <rect x="185" y="55" width="30" height="12" rx="3" class="hotspot" data-hotspot="puerto_usbc"/>
-            <path d="M85,60 Q130,52 170,62 L170,70 Q130,60 85,68 Z" class="hotspot" data-hotspot="lb_l1"/>
-            <path d="M315,60 Q270,52 230,62 L230,70 Q270,60 315,68 Z" class="hotspot" data-hotspot="rb_r1"/>
-        </svg>`;
-    }
-    return `
-    <svg viewBox="0 0 400 280" class="svg-controller-container">
-        <rect x="60" y="50" width="280" height="180" rx="35" fill="#0d0f16" stroke="rgba(0, 242, 254, 0.2)" stroke-width="2"/>
-        <circle cx="110" cy="110" r="24" class="hotspot" data-hotspot="joystick_izq"/>
-        <circle cx="290" cy="160" r="24" class="hotspot" data-hotspot="joystick_der"/>
-        <rect x="155" y="150" width="35" height="35" rx="5" class="hotspot" data-hotspot="dpad"/>
-        <circle cx="290" cy="95" r="20" class="hotspot" data-hotspot="botones_action"/>
-        <rect x="185" y="38" width="30" height="12" rx="3" class="hotspot" data-hotspot="puerto_usbc"/>
-        <rect x="175" y="200" width="50" height="20" rx="3" class="hotspot" data-hotspot="bateria"/>
-    </svg>`;
-}
-
-function loadServices(){
-    const targetImg = document.getElementById("mandoImg");
-    targetImg.style.opacity = 0;
-    targetImg.style.transform = "scale(0.9)";
-    setTimeout(() => {
-        targetImg.src=imagenes[m.value]; 
-        targetImg.style.opacity = 1;
-        targetImg.style.transform = "scale(1)";
-    }, 150);
-
-    const svgContainer = document.getElementById("svgInteractiveContainer");
-    svgContainer.innerHTML = getControllerSVG(m.value);
-
-    containerServicios.innerHTML="";
-    data[m.value].forEach((x, index)=>{
-        let div = document.createElement("div");
-        div.className = "service-item";
-        div.innerHTML = `
-            <input type="checkbox" id="srv_${index}" value="${x[0]}" data-hotspots="${x[3] || 'flex_principal'}" onchange="syncHotspotsFromCheckboxes(); calc();">
-            <label for="srv_${index}" class="service-details">
-                <span class="service-name">${x[0]}</span>
-                <span class="service-price">$${x[1]}</span>
-            </label>
-        `;
-        containerServicios.appendChild(div);
-    });
-
-    bindInteractiveHotspots();
-    calc();
-}
-
-function bindInteractiveHotspots() {
-    const hotspots = document.querySelectorAll('.hotspot');
-    const visualCard = document.getElementById('componentVisualCard');
-
-    hotspots.forEach(hs => {
-        const key = hs.getAttribute('data-hotspot');
-        const meta = HOTSPOT_META_INFO[key] || { name: key, desc: "Soporte de micro-soldadura electrónica avanzada para este segmento." };
-
-        // Desktop Hover
-        hs.addEventListener('mouseenter', () => {
-            showMetaPanel(meta, visualCard);
-        });
-
-        hs.addEventListener('mouseleave', () => {
-            visualCard.classList.remove('active');
-        });
-
-        // Evento híbrido unificado para soporte PC y Smartphone (Celulares)
-        const handleSelection = (e) => {
-            e.preventDefault();
-            showMetaPanel(meta, visualCard);
-            
-            const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
-            let foundMatch = false;
-
-            checkboxes.forEach(cb => {
-                const maps = cb.getAttribute('data-hotspots').split(',');
-                if (maps.includes(key)) {
-                    cb.checked = !cb.checked;
-                    foundMatch = true;
-                }
-            });
-
-            if (foundMatch) {
-                syncHotspotsFromCheckboxes();
-                calc();
-            }
-        };
-
-        hs.addEventListener('click', handleSelection);
-        hs.addEventListener('touchstart', handleSelection, { passive: false });
-    });
-}
-
-function showMetaPanel(meta, cardElement) {
-    cardElement.classList.add('active');
-    cardElement.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-            <span style="font-weight:600; color:#00f2fe; font-size:14px;">⚡ Componente: ${meta.name}</span>
-        </div>
-        <p style="margin:0; font-size:12px; color:#cbd5e1; line-height:1.4;">${meta.desc}</p>
-        <div class="zoom-lens-container">
-            <div style="width:8px; height:8px; background:#00f2fe; border-radius:50%; box-shadow:0 0 6px #00f2fe;"></div>
-            <div style="font-size:11px; color:#707e94;">
-                <strong>Vista Ampliada XE:</strong> Instalación de precisión superficial (SMD) con aleación reforzada en laboratorio.
-            </div>
-        </div>
-    `;
-}
-
-function syncHotspotsFromCheckboxes() {
-    const hotspots = document.querySelectorAll('.hotspot');
-    hotspots.forEach(hs => hs.classList.remove('selected'));
-
-    const checkedBoxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
-    checkedBoxes.forEach(cb => {
-        const maps = cb.getAttribute('data-hotspots').split(',');
-        maps.forEach(hKey => {
-            const targetHs = document.querySelector(`.hotspot[data-hotspot="${hKey}"]`);
-            if (targetHs) {
-                targetHs.classList.add('selected');
-            }
-        });
-    });
-}
-
-function calc(){
-    let totalDinero = 0;
-    let listaTiempos = [];
-    
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
-    
-    checkboxes.forEach(cb => {
-        let elementoData = data[m.value].find(x => x[0] === cb.value);
-        if(elementoData) {
-            totalDinero += elementoData[1];
-            listaTiempos.push(elementoData[2]);
-        }
-    });
-
-    // Apuntando de forma nativa segura a los IDs reales de la UI
-    document.getElementById("precio").innerText = "$" + totalDinero;
-
-    if(totalDinero > 460) {
-        let ahorro = Math.round(totalDinero * 0.10);
-        let precioFinal = totalDinero - ahorro;
-        
-        descuentoRow.style.display = "block";
-        descuentoMonto.innerText = "-$" + ahorro;
-        document.getElementById("total").innerText = "$" + precioFinal;
-        promoAplicadaText = `\n🎁 Descuento 10%: -$${ahorro} (Súpero los $460)`;
-    } else {
-        descuentoRow.style.display = "none";
-        document.getElementById("total").innerText = "$" + totalDinero;
-        promoAplicadaText = "";
-    }
-
-    if(listaTiempos.length > 0) {
-        document.getElementById("tiempo").innerText = listaTiempos.join(" + ");
-    } else {
-        document.getElementById("tiempo").innerText = "-";
-    }
-}
-
-function sendWA(){
-    let serviciosSeleccionados = [];
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
-    checkboxes.forEach(cb => serviciosSeleccionados.push(cb.value));
-
-    let srvTexto = serviciosSeleccionados.length > 0 ? serviciosSeleccionados.join(", ") : "Ninguno seleccionado";
-
-    let msg=`🎮 XE SERVICIO ELECTRÓNICO\n¼ DESCUENTO DE CONTROL APLICADO\n\n👤 Cliente: ${cliente.value}\n🎮 Mando: ${m.value}\n🔧 Fallas: ${srvTexto}\n\n💰 Subtotal: ${document.getElementById("precio").innerText}${promoAplicadaText}\n💵 NETO A PAGAR: ${document.getElementById("total").innerText}\n⏱ Tiempo Combinado: ${document.getElementById("tiempo").innerText}\n\n📝 Notas: ${obs.value}`;
-    window.open("https://wa.me/527471731852?text="+encodeURIComponent(msg));
-}
-</script>
-
-</body>
-</html>
+let promoAplicadaText 
