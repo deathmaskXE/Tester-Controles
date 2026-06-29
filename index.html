@@ -211,7 +211,7 @@ font-size: 14px;
 /* LÍNEA DE DESCUENTO */
 #descuentoRow {
     margin-bottom: 6px;
-    color: #ef4444; 
+    color: #ef4444; /* Rojo/Rosa de advertencia o descuento */
     display: none;
 }
 #descuentoRow span { color: #ef4444; font-weight: 600; }
@@ -230,7 +230,7 @@ align-items: center;
 .total span { color: #00f2fe; }
 
 /* ==========================================================================
-   ESTILOS PREMIUM OPTIMIZADOS MÓVIL - EXPLOSIÓN DE PIEZAS
+   NUEVOS ESTILOS OPTIMIZADOS PARA EXPLOSIÓN DE PIEZAS INTERACTIVA
    ========================================================================== */
 .interactive-viewer-box {
     background: linear-gradient(135deg, rgba(13, 15, 22, 0.95) 0%, rgba(6, 7, 11, 0.99) 100%);
@@ -246,34 +246,34 @@ align-items: center;
 
 .svg-viewport-wrapper {
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
     height: auto;
     margin: auto;
     position: relative;
-    touch-action: manipulation; /* Optimiza toques en smartphones */
 }
 
+/* Elementos activos del Vector SVG */
 .hotspot {
-    fill: rgba(0, 242, 254, 0.04);
+    fill: rgba(0, 242, 254, 0.03);
     stroke: rgba(0, 242, 254, 0.3);
-    stroke-width: 1.8;
+    stroke-width: 1.5;
     cursor: pointer;
-    pointer-events: auto; /* Asegura captura de eventos touch */
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.hotspot:hover, .hotspot:active {
-    fill: rgba(0, 242, 254, 0.2);
+.hotspot:hover {
+    fill: rgba(0, 242, 254, 0.18);
     stroke: #00f2fe;
-    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.7));
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
 }
 
 .hotspot.selected {
-    fill: rgba(0, 114, 255, 0.4);
+    fill: rgba(0, 114, 255, 0.35);
     stroke: #0072ff;
-    filter: drop-shadow(0 0 12px rgba(0, 114, 255, 0.9));
+    filter: drop-shadow(0 0 12px rgba(0, 114, 255, 0.8));
 }
 
+/* Panel descriptivo flotante de componentes */
 .component-info-card {
     width: 100%;
     background: #080a0f;
@@ -282,6 +282,12 @@ align-items: center;
     padding: 14px;
     margin-top: 15px;
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.component-info-card.active {
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.05);
 }
 
 .zoom-lens-container {
@@ -332,7 +338,6 @@ align-items: center;
 <label>Modelo de Control</label>
 <select id="mando" onchange="loadServices()"></select>
 
-<!-- MAPA INTERACTIVO DE EXPLOSIÓN DE PIEZAS -->
 <label>🗺️ Diagnóstico Visual (Toca la pieza dañada)</label>
 <div class="interactive-viewer-box">
     <div class="svg-viewport-wrapper" id="svgInteractiveContainer"></div>
@@ -478,13 +483,14 @@ const imagenes = {
 "Nintendo Switch Pro Controller":"pro-controller.png"
 }; 
 
+// Mapeos técnicos universales para descripciones del Bonus expandido
 const HOTSPOT_META_INFO = {
     "joystick_izq": { name: "Joystick Izquierdo", desc: "Mecanismo analógico completo. Corrige desviaciones no deseadas o tirones en el juego." },
     "joystick_der": { name: "Joystick Derecho", desc: "Mecanismo analógico completo. Restaura el centrado y suavidad de la cámara de juego." },
     "potenciometro_izq": { name: "Potenciómetro Izquierdo", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y izquierdo." },
     "potenciometro_der": { name: "Potenciómetro Derecho", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y derecho." },
     "puerto_usbc": { name: "Puerto de Carga / USB-C", desc: "Puerto físico reforzado. Elimina falsos contactos al energizar o sincronizar el control." },
-    "dpad": { name: "D-Pad (Cruceta)", desc: "Domos de contacto y cruceta direccional mecánica para una precisión perfecta por pulsación." },
+    "dpad": { name: "D-Pad (Cruceta)", price: 150, desc: "Domos de contacto y cruceta direccional mecánica para una precisión perfecta por pulsación." },
     "botones_action": { name: "Botones Principales", desc: "Puntos de contacto frontales (A,B,X,Y / Figuras). Resuelve botones pegados o rotos." },
     "lb_l1": { name: "Bumper / Interruptor L1-LB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
     "rb_r1": { name: "Bumper / Interruptor R1-RB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
@@ -505,11 +511,6 @@ let containerServicios=document.getElementById("serviciosContainer");
 let descuentoRow=document.getElementById("descuentoRow");
 let descuentoMonto=document.getElementById("descuentoMonto");
 
-// Capturando elementos de texto que faltaban por ID en tu código original
-let precioElement = document.getElementById("precio");
-let tiempoElement = document.getElementById("tiempo");
-let totalElement = document.getElementById("total");
-
 let promoAplicadaText = "";
 
 Object.keys(data).forEach(x=>{
@@ -519,4 +520,6 @@ Object.keys(data).forEach(x=>{
     m.appendChild(o);
 });
 
-loadSe
+loadServices();
+
+// Genera plantill
