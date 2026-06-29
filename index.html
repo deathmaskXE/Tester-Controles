@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XE Servicio Electrónico - Cotizador de Controles</title>
 
-<!-- Tipografía Premium -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -134,6 +133,49 @@ background: #121520;
 box-shadow: 0 0 0 3px rgba(0, 114, 255, 0.15);
 }
 
+/* CONTENEDOR MULTI-SELECCIÓN DE SERVICIOS */
+.services-checkbox-container {
+    max-height: 250px;
+    overflow-y: auto;
+    background: #0d0f16;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px;
+    margin: 4px 0 12px 0;
+}
+
+.services-checkbox-container::-webkit-scrollbar { width: 4px; }
+.services-checkbox-container::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 4px; }
+
+.service-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+.service-item:hover { background: rgba(255, 255, 255, 0.03); }
+
+.service-item input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #00f2fe;
+    transform: scale(1.2);
+}
+
+.service-details {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 13px;
+}
+.service-name { color: #e2e8f0; }
+.service-price { color: #00f2fe; font-weight: 500; }
+
 button {
 width:100%;
 padding:16px;
@@ -164,8 +206,15 @@ border-radius: 16px;
 margin-top: 25px;
 font-size: 14px;
 }
-
 .result span { font-weight: 500; color: white; }
+
+/* LÍNEA DE DESCUENTO */
+#descuentoRow {
+    margin-bottom: 6px;
+    color: #ef4444; /* Rojo/Rosa de advertencia o descuento */
+    display: none;
+}
+#descuentoRow span { color: #ef4444; font-weight: 600; }
 
 .total{
 font-size: 32px;
@@ -216,8 +265,8 @@ body { padding: 10px; }
 <label>Modelo de Control</label>
 <select id="mando" onchange="loadServices()"></select>
 
-<label>Falla / Servicio</label>
-<select id="servicio" onchange="calc()"></select>
+<label>Selecciona los Servicios Requeridos</label>
+<div class="services-checkbox-container" id="serviciosContainer"></div>
 
 <label>Cliente</label>
 <input id="cliente" placeholder="Tu nombre">
@@ -226,8 +275,9 @@ body { padding: 10px; }
 <textarea id="obs" rows="3" placeholder="Ej: El joystick izquierdo se mueve solo..."></textarea>
 
 <div class="result">
-💰 Precio: <span id="precio">$0</span><br style="content: ''; margin-bottom: 6px; display: block;">
-⏱ Tiempo estimado: <span id="tiempo">-</span><br>
+💰 Subtotal Servicios: <span id="precio">$0</span><br style="content: ''; margin-bottom: 6px; display: block;">
+<div id="descuentoRow">🎁 Descuento Aplicado (10%): <span id="descuentoMonto">-$0</span><br style="content: ''; margin-bottom: 6px; display: block;"></div>
+⏱ Tiempos estimados combinados: <span id="tiempo">-</span><br>
 <div class="total">TOTAL: <span id="total">$0</span></div>
 </div>
 
@@ -344,14 +394,19 @@ const imagenes = {
 "Control Xbox Series (S/X)":"xbox-series.png",
 "Control Xbox Elite Series 2":"elite-series-2.png",
 "Control PS4 (DualShock 4)":"dualshock-4.png",
-"Control PS5 DualSense":"dualsense.png", // <--- Corregido para que apunte a tu nueva imagen
+"Control PS5 DualSense":"dualsense.png",
 "Control PS5 DualSense Edge":"dualsense-edge.png",
 "Nintendo Switch (Joy-Con)":"joycon.png",
 "Nintendo Switch Pro Controller":"pro-controller.png"
 }; 
 
 let m=document.getElementById("mando");
-let s=document.getElementById("servicio");
+let containerServicios=document.getElementById("serviciosContainer");
+let descuentoRow=document.getElementById("descuentoRow");
+let descuentoMonto=document.getElementById("descuentoMonto");
+
+// Variable global para capturar si se aplicó descuento para el mensaje de WA
+let promoAplicadaText = "";
 
 Object.keys(data).forEach(x=>{
     let o=document.createElement("option");
@@ -372,27 +427,68 @@ function loadServices(){
         targetImg.style.transform = "scale(1)";
     }, 150);
 
-    s.innerHTML="";
-    data[m.value].forEach(x=>{
-        let o=document.createElement("option");
-        o.value=x[0];
-        o.textContent=x[0];
-        s.appendChild(o);
+    containerServicios.innerHTML="";
+    data[m.value].forEach((x, index)=>{
+        let div = document.createElement("div");
+        div.className = "service-item";
+        div.innerHTML = `
+            <input type="checkbox" id="srv_${index}" value="${x[0]}" onchange="calc()">
+            <label for="srv_${index}" class="service-details">
+                <span class="service-name">${x[0]}</span>
+                <span class="service-price">$${x[1]}</span>
+            </label>
+        `;
+        containerServicios.appendChild(div);
     });
     calc();
 }
 
 function calc(){
-    let d=data[m.value].find(x=>x[0]===s.value);
-    if(d){
-        precio.innerText="$"+d[1];
-        tiempo.innerText=d[2];
-        total.innerText="$"+d[1];
+    let totalDinero = 0;
+    let listaTiempos = [];
+    
+    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
+    
+    checkboxes.forEach(cb => {
+        let elementoData = data[m.value].find(x => x[0] === cb.value);
+        if(elementoData) {
+            totalDinero += elementoData[1];
+            listaTiempos.push(elementoData[2]);
+        }
+    });
+
+    precio.innerText = "$" + totalDinero;
+
+    // LÓGICA DE DESCUENTO DEL 10% SUPERANDO LOS $460 PESOS
+    if(totalDinero > 460) {
+        let ahorro = Math.round(totalDinero * 0.10);
+        let precioFinal = totalDinero - ahorro;
+        
+        descuentoRow.style.display = "block";
+        descuentoMonto.innerText = "-$" + ahorro;
+        total.innerText = "$" + precioFinal;
+        promoAplicadaText = `\n🎁 Descuento 10%: -$${ahorro} (Súpero los $460)`;
+    } else {
+        descuentoRow.style.display = "none";
+        total.innerText = "$" + totalDinero;
+        promoAplicadaText = "";
+    }
+
+    if(listaTiempos.length > 0) {
+        tiempo.innerText = listaTiempos.join(" + ");
+    } else {
+        tiempo.innerText = "-";
     }
 }
 
 function sendWA(){
-    let msg=`🎮 XE SERVICIO ELECTRÓNICO\n🕹 COTIZACIÓN DE CONTROL\n\n👤 Cliente: ${cliente.value}\n🎮 Mando: ${m.value}\n🔧 Falla: ${s.value}\n\n💰 Costo: ${total.innerText}\n⏱ Tiempo: ${tiempo.innerText}\n\n📝 Notas: ${obs.value}`;
+    let serviciosSeleccionados = [];
+    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
+    checkboxes.forEach(cb => serviciosSeleccionados.push(cb.value));
+
+    let srvTexto = serviciosSeleccionados.length > 0 ? serviciosSeleccionados.join(", ") : "Ninguno seleccionado";
+
+    let msg=`🎮 XE SERVICIO ELECTRÓNICO\n¼ DESCUENTO DE CONTROL APLICADO\n\n👤 Cliente: ${cliente.value}\n🎮 Mando: ${m.value}\n🔧 Fallas: ${srvTexto}\n\n💰 Subtotal: ${precio.innerText}${promoAplicadaText}\n💵 NETO A PAGAR: ${total.innerText}\n⏱ Tiempo Combinado: ${tiempo.innerText}\n\n📝 Notas: ${obs.value}`;
     window.open("https://wa.me/527471731852?text="+encodeURIComponent(msg));
 }
 </script>
