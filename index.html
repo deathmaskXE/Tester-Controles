@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XE Servicio Electrónico - Cotizador de Controles</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+margin:0;
+font-family:'Poppins', 'Segoe UI', Arial, sans-serif;
+background: radial-gradient(circle at top, #0b1528 0%, #06070b 60%, #000000 100%);
+background-attachment:fixed;
+color:#e2e8f0;
+padding:20px;
+overflow-x:hidden;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    background: rgba(6, 7, 11, 0.6);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 14px 20px;
+    margin: -20px -20px 20px -20px;
+}
+
+.top-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #707e94;
+    font-weight: 500;
+}
+
+.top-bar-item svg { width: 16px; height: 16px; color: #00f2fe; }
+
+.container{
+max-width:800px;
+margin:auto;
+position:relative;
+padding:4px;
+border-radius:20px;
+}
+
+.logo{ text-align:center; padding: 20px 0; }
+.logo-img{ 
+width:190px; 
+display:block; 
+margin:auto; 
+filter:drop-shadow(0 6px 20px rgba(0, 114, 255, 0.3)); 
+}
+
+/* CONTENEDOR DE CONTROL CON RESPLANDOR NEÓN CIAN */
+.console-box{ 
+display:flex; 
+justify-content:center; 
+margin:25px auto; 
+background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0,0,0,0) 70%);
+padding: 20px;
+border-radius: 24px;
+width: 320px;
+height: 320px;
+align-items: center;
+border: 1px solid rgba(0, 242, 254, 0.15);
+box-shadow: 0 0 35px rgba(0, 242, 254, 0.08);
+transition: all 0.5s ease;
+} 
+
+.console-box img{ 
+width:260px; 
+max-width:100%; 
+transition: opacity 0.15s ease, transform 0.15s ease; 
+filter:drop-shadow(0 15px 25px rgba(0,0,0,0.8)); 
+} 
+
+.console-box:hover {
+border-color: rgba(0, 242, 254, 0.3);
+box-shadow: 0 0 45px rgba(0, 242, 254, 0.15);
+}
+
+.card{
+background: linear-gradient(135deg, rgba(20, 20, 25, 0.85) 0%, rgba(10, 10, 12, 0.95) 100%);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.05);
+padding: 30px;
+margin: 25px 0;
+border-radius: 20px;
+box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+label {
+display: block;
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+color: #00f2fe;
+margin-top: 20px;
+margin-bottom: 8px;
+font-weight: 600;
+}
+
+select,input,textarea{
+width:100%;
+padding: 14px 16px;
+margin: 4px 0 12px 0;
+border-radius:12px;
+border: 1px solid rgba(255, 255, 255, 0.08);
+background:#0d0f16;
+color:white;
+font-family: inherit;
+font-size: 14px;
+box-sizing: border-box;
+transition: all 0.3s ease;
+}
+
+select:hover, input:hover, textarea:hover{ border-color: rgba(0, 114, 255, 0.4); }
+select:focus, input:focus, textarea:focus{
+outline:none;
+border-color: #0072ff;
+background: #121520;
+box-shadow: 0 0 0 3px rgba(0, 114, 255, 0.15);
+}
+
+/* CONTENEDOR MULTI-SELECCIÓN DE SERVICIOS */
+.services-checkbox-container {
+    max-height: 250px;
+    overflow-y: auto;
+    background: #0d0f16;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px;
+    margin: 4px 0 12px 0;
+}
+
+.services-checkbox-container::-webkit-scrollbar { width: 4px; }
+.services-checkbox-container::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 4px; }
+
+.service-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+.service-item:hover { background: rgba(255, 255, 255, 0.03); }
+
+.service-item input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+    accent-color: #00f2fe;
+    transform: scale(1.2);
+}
+
+.service-details {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 13px;
+}
+.service-name { color: #e2e8f0; }
+.service-price { color: #00f2fe; font-weight: 500; }
+
+button {
+width:100%;
+padding:16px;
+border:none;
+border-radius:12px;
+font-weight:600;
+font-size:14px;
+font-family: inherit;
+cursor:pointer;
+margin-top:14px;
+transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+box-sizing: border-box;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.wa { background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%); color: white; }
+.wa:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 114, 255, 0.35); }
+
+.result{
+background: linear-gradient(135deg, rgba(0, 114, 255, 0.1) 0%, rgba(0, 242, 254, 0.05) 100%);
+border: 1px solid rgba(0, 242, 254, 0.2);
+padding: 20px;
+border-radius: 16px;
+margin-top: 25px;
+font-size: 14px;
+}
+.result span { font-weight: 500; color: white; }
+
+/* LÍNEA DE DESCUENTO */
+#descuentoRow {
+    margin-bottom: 6px;
+    color: #ef4444; 
+    display: none;
+}
+#descuentoRow span { color: #ef4444; font-weight: 600; }
+
+.total{
+font-size: 32px;
+font-weight: 700;
+color: #00f2fe;
+margin-top: 14px;
+padding-top: 14px;
+border-top: 1px solid rgba(255, 255, 255, 0.08);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.total span { color: #00f2fe; }
+
+/* ==========================================================================
+   ESTILOS PREMIUM OPTIMIZADOS MÓVIL - EXPLOSIÓN DE PIEZAS
+   ========================================================================== */
+.interactive-viewer-box {
+    background: linear-gradient(135deg, rgba(13, 15, 22, 0.95) 0%, rgba(6, 7, 11, 0.99) 100%);
+    border: 1px solid rgba(0, 242, 254, 0.15);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 15px 0 25px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.svg-viewport-wrapper {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin: auto;
+    position: relative;
+    touch-action: manipulation; /* Optimiza toques en smartphones */
+}
+
+.hotspot {
+    fill: none;
+    stroke: rgba(0, 242, 254, 0.4);
+    stroke-width: 2;
+    cursor: pointer;
+    pointer-events: auto; /* Asegura captura de eventos touch */
+    transition: all 0.2s ease;
+}
+
+.hotspot:hover, .hotspot:active {
+    fill: rgba(0, 242, 254, 0.15);
+    stroke: #00f2fe;
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.7));
+}
+
+.hotspot.selected {
+    fill: rgba(0, 114, 255, 0.35);
+    stroke: #0072ff;
+    filter: drop-shadow(0 0 12px rgba(0, 114, 255, 0.9));
+}
+
+.control-base-line {
+    stroke: rgba(226, 232, 240, 0.25);
+    stroke-width: 2;
+    fill: none;
+}
+
+.component-info-card {
+    width: 100%;
+    background: #080a0f;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 15px;
+    box-sizing: border-box;
+}
+
+.zoom-lens-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border-left: 3px solid #00f2fe;
+}
+
+@media(max-width: 600px){
+    body { padding: 10px; }
+    .card { padding: 20px; }
+    .console-box { width: 240px; height: 240px; }
+    .console-box img { width: 190px; }
+    .top-bar { display: none; }
+    .zoom-lens-container { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <div class="top-bar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31(2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+        Reparación de Mandos
+    </div>
+    <div class="top-bar-item">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        Garantía XE Electrónica
+    </div>
+</div>
+
+<div class="container">
+
+<div class="logo"> 
+    <img src="logo.png" class="logo-img"> 
+    <div class="console-box"> 
+        <img id="mandoImg" src="xbox-one.png"> 
+    </div>
+</div>
+
+<div class="card">
+<label>Modelo de Control</label>
+<select id="mando" onchange="loadServices()"></select>
+
+<!-- MAPA INTERACTIVO DE EXPLOSIÓN DE PIEZAS -->
+<label>🗺️ Diagnóstico Visual (Toca la pieza dañada)</label>
+<div class="interactive-viewer-box">
+    <div class="svg-viewport-wrapper" id="svgInteractiveContainer">
+        <!-- SVG interactivo basado exactamente en la imagen provista -->
+        <svg viewBox="0 0 400 400" width="100%" height="100%">
+            <!-- Silueta base gris tenue -->
+            <path class="control-base-line" d="M 90 210 Q 60 270 60 330 Q 60 360 90 360 Q 130 360 150 310 L 160 290 L 240 290 L 250 310 Q 270 360 310 360 Q 340 360 340 330 Q 340 270 310 210 Q 280 150 200 150 Q 120 150 90 210 Z" stroke-dasharray="3 3"/>
+            <path class="control-base-line" d="M 90 210 Q 150 250 200 250 Q 250 250 310 210" opacity="0.3"/>
+            
+            <!-- Componentes interactivos mapeados (Hotspots con la forma exacta de la imagen) -->
+            <!-- Gatillo Izquierdo (Arriba Izquierda Exterior) -->
+            <path id="hotspot_lt_l2" class="hotspot" d="M 130 50 Q 130 30 145 30 Q 160 30 160 50 Q 160 80 145 80 Q 130 80 130 50 Z" data-comp="lt_l2"/>
+            <!-- Bumper Izquierdo (Arriba Izquierda Interior) -->
+            <rect id="hotspot_lb_l1" class="hotspot" x="120" y="95" width="45" height="15" rx="7" data-comp="lb_l1"/>
+            
+            <!-- Gatillo Derecho (Arriba Derecha Exterior) -->
+            <path id="hotspot_rt_r2" class="hotspot" d="M 240 50 Q 240 30 255 30 Q 270 30 270 50 Q 270 80 255 80 Q 240 80 240 50 Z" data-comp="rt_r2"/>
+            <!-- Bumper Derecho (Arriba Derecha Interior) -->
+            <rect id="hotspot_rb_r1" class="hotspot" x="235" y="95" width="45" height="15" rx="7" data-comp="rb_r1"/>
+            
+            <!-- Joystick Izquierdo (Arriba Izquierda del cuerpo) -->
+            <circle id="hotspot_joystick_izq" class="hotspot" cx="130" cy="200" r="28" data-comp="joystick_izq"/>
+            
+            <!-- Botones Centrales (Select / Start) -->
+            <circle id="hotspot_home_btn" class="hotspot" cx="180" cy="200" r="10" data-comp="home_btn"/>
+            <circle id="hotspot_flex_principal" class="hotspot" cx="220" cy="200" r="10" data-comp="flex_principal"/>
+            
+            <!-- Botones de Acción (Arriba Derecha del cuerpo) -->
+            <g id="hotspot_botones_action" class="hotspot" data-comp="membrana">
+                <circle cx="280" cy="200" r="28" fill="transparent" stroke="none" style="pointer-events:none;"/>
+                <path d="M 280 175 Q 270 185 280 190 Q 290 185 280 175 Z" stroke="inherit" fill="inherit"/>
+                <path d="M 280 225 Q 270 215 280 210 Q 290 215 280 225 Z" stroke="inherit" fill="inherit"/>
+                <path d="M 255 200 Q 265 190 270 200 Q 265 210 255 200 Z" stroke="inherit" fill="inherit"/>
+                <path d="M 305 200 Q 295 190 290 200 Q 295 210 305 200 Z" stroke="inherit" fill="inherit"/>
+            </g>
+            
+            <!-- D-Pad / Cruceta (Abajo Izquierda del cuerpo) -->
+            <g id="hotspot_dpad" class="hotspot" data-comp="dpad">
+                <circle cx="170" cy="260" r="25" fill="transparent" stroke="none" style="pointer-events:none;"/>
+                <path d="M 170 240 Q 162 248 170 252 Q 178 248 170 240 Z" stroke="inherit" fill="inherit"/>
+                <path d="M 170 280 Q 162 272 170 268 Q 178 272 170 280 Z" stroke="inherit" fill="inherit"/>
+                <path d="M 150 260 Q 158 252 162 260 Q 158 268 150 260 Z" stroke="inherit" fill="inherit"/>
+                <path d="M 190 260 Q 182 252 178 260 Q 182 268 190 260 Z" stroke="inherit" fill="inherit"/>
+            </g>
+            
+            <!-- Joystick Derecho (Abajo Derecha del cuerpo) -->
+            <circle id="hotspot_joystick_der" class="hotspot" cx="250" cy="260" r="28" data-comp="joystick_der"/>
+        </svg>
+    </div>
+    <div class="component-info-card" id="componentVisualCard">
+        <div style="color: #707e94; font-size:13px; text-align:center; padding:10px 0;">
+            Pasa el cursor o presiona un componente para inspección técnica detallada...
+        </div>
+    </div>
+</div>
+
+<label>Selecciona los Servicios Requeridos</label>
+<div class="services-checkbox-container" id="serviciosContainer"></div>
+
+<label>Cliente</label>
+<input id="cliente" placeholder="Tu nombre">
+
+<label>Notas adicionales</label>
+<textarea id="obs" rows="3" placeholder="Ej: El joystick izquierdo se mueve solo..."></textarea>
+
+<div class="result">
+💰 Subtotal Servicios: <span id="precio">$0</span><br style="content: ''; margin-bottom: 6px; display: block;">
+<div id="descuentoRow">🎁 Descuento Aplicado (10%): <span id="descuentoMonto">-$0</span><br style="content: ''; margin-bottom: 6px; display: block;"></div>
+⏱ Tiempos estimados combinados: <span id="tiempo">-</span><br>
+<div class="total">TOTAL: <span id="total">$0</span></div>
+</div>
+
+<button class="wa" onclick="sendWA()">📲 Enviar Presupuesto por WhatsApp</button>
+</div>
+
+</div>
+
+<script>
+const data = {
+"Control Xbox One (Fat/S/X)":[
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Goma conductiva (botones)", 250, "10 min", "membrana"],
+    ["D-pad", 150, "10 min", "dpad"],
+    ["Bumper LB y RB", 250, "10 min", "lb_l1,rb_r1"],
+    ["Gatillo hall interno", 250, "10 min", "lt_l2,rt_r2"],
+    ["Gatillo plástico", 150, "15 min", "lt_l2,rt_r2"],
+    ["Microswich LB y RB", 250, "10 min", "lb_l1,rb_r1"],
+    ["Puerto de carga V8", 280, "30 min", "puerto_usbc"],
+    ["Jack de auriculares", 200, "5 min", "flex_principal"],
+    ["Capuchón original par (gomas)", 60, "5 min", "joystick_izq,joystick_der"],
+    ["Limpieza profunda", 80, "30 min", "flex_principal"],
+    ["Reparación electrónica", 450, "2 hrs", "flex_principal"],
+    ["Cambio de placa Power", 450, "15 min", "flex_principal"],
+    ["Cambio de placa Control", 500, "10 min", "flex_principal"],
+    ["Reparación Bluetooth", 450, "25 min", "flex_principal"],
+    ["Cambio de color de led", 50, "10 min", "home_btn"],
+    ["Cambio de carcasa frontal", 300, "10 min", "flex_principal"]
+],
+"Control Xbox Series (S/X)":[
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Goma conductiva botones", 250, "10 min", "membrana"],
+    ["Bumper LB y RB", 250, "5 min", "lb_l1,rb_r1"],
+    ["Microswich LB y RB", 250, "15 min", "lb_l1,rb_r1"],
+    ["Gatillo plástico", 150, "15 min", "lt_l2,rt_r2"],
+    ["Gatillo hall interno", 300, "20 min", "lt_l2,rt_r2"],
+    ["D-pad", 150, "10 min", "dpad"],
+    ["Puerto tipo C", 300, "30 min", "puerto_usbc"],
+    ["Fallas de encendido", 550, "3 hrs", "bateria"],
+    ["Cambio de placa Power", 480, "10 min", "flex_principal"],
+    ["Cambio de placa joysticks", 600, "10 min", "flex_principal"],
+    ["Fallas de Bluetooth", 450, "2 hrs", "flex_principal"],
+    ["Capuchon original par (gomas)", 60, "5 min", "joystick_izq,joystick_der"],
+    ["Cambio de color led", 60, "10 min", "home_btn"],
+    ["Cambio de carcasa frontal", 450, "10 min", "flex_principal"]
+],
+"Control Xbox Elite Series 2":[
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Goma conductiva botones", 250, "10 min", "membrana"],
+    ["Bumper LB y RB", 250, "5 min", "lb_l1,rb_r1"],
+    ["Microswich LB y RB", 250, "15 min", "lb_l1,rb_r1"],
+    ["Mantenimiento Completo y Limpieza", 200, "30 min", "flex_principal"],
+    ["Falla en Palancas Traseras (Paddles)", 300, "40 min", "flex_principal"]
+],
+"Control PS4 (DualShock 4)":[
+    ["Joystick", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Membrana de botones", 300, "20 min", "flex_principal"],
+    ["Goma condutivas", 200, "10 min", "membrana"],
+    ["Gatillo aptico", 450, "1 hr", "lt_l2,rt_r2"],
+    ["Flex gatillo", 300, "5 min", "lt_l2,rt_r2"],
+    ["Centro de carga tipo C", 300, "30 min", "puerto_usbc"],
+    ["Puerto audífonos", 300, "15 min", "flex_principal"],
+    ["Pmic", 600, "1 hr", "flex_principal"],
+    ["Corto en placa", 500, "2 hrs", "flex_principal"]
+],
+"Control PS5 DualSense":[
+    ["Joystick", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Membrana de botones", 250, "20 min", "flex_principal"],
+    ["Goma conductiva", 200, "10 min", "membrana"],
+    ["Motor adaptativo", 450, "1 hr", "flex_principal"],
+    ["Motor aptico", 450, "1 hr", "flex_principal"],
+    ["Gatillo aptico", 450, "1 hr", "lt_l2,rt_r2"],
+    ["Flex gatillo", 300, "5 min", "lt_l2,rt_r2"],
+    ["Centro de carga tipo C", 300, "30 min", "puerto_usbc"],
+    ["Jack de audífonos", 300, "15 min", "flex_principal"],
+    ["Pmic", 650, "1 hr", "flex_principal"],
+    ["Corto en placa", 500, "2 hrs", "flex_principal"]
+],
+"Control PS5 DualSense Edge":[
+    ["Joystick original", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 600, "10 min", "joystick_izq,joystick_der"],
+    ["Gatillo adaptative", 700, "1 hr", "lt_l2,rt_r2"],
+    ["Motor adaptativo", 700, "1 hr", "flex_principal"],
+    ["Motor haptico", 450, "30 min", "flex_principal"],
+    ["Membrana de botones", 500, "1 hr", "flex_principal"],
+    ["Jack de audífonos", 450, "45 min", "flex_principal"],
+    ["Pmic", 1500, "1 hr", "flex_principal"]
+],
+"Nintendo Switch (Joy-Con)":[
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Flex vinculación inalámbrica", 350, "10 min", "flex_principal"],
+    ["Riel", 400, "10 min", "flex_principal"],
+    ["Batería", 400, "5 min", "flex_principal"],
+    ["Carcasa", 280, "20 min", "flex_principal"]
+],
+"Nintendo Switch Pro Controller":[
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Puerto de carga", 400, "30 min", "puerto_usbc"],
+    ["Goma conductiva", 300, "15 min", "membrana"],
+    ["Corto en placa", 450, "2 hrs", "flex_principal"]
+]
+};
+
+const imagenes = {
+"Control Xbox One (Fat/S/X)":"xbox-one.png",
+"Control Xbox Series (S/X)":"xbox-series.png",
+"Control Xbox Elite Series 2":"elite-series-2.png",
+"Control PS4 (DualShock 4)":"dualshock-4.png",
+"Control PS5 DualSense":"dualsense.png",
+"Control PS5 DualSense Edge":"dualsense-edge.png",
+"Nintendo Switch (Joy-Con)":"joycon.png",
+"Nintendo Switch Pro Controller":"pro-controller.png"
+}; 
+
+const HOTSPOT_META_INFO = {
+    "joystick_izq": { name: "Joystick Izquierdo", desc: "Mecanismo analógico completo o capuchón original. Corrige desviaciones no deseadas o drift." },
+    "joystick_der": { name: "Joystick Derecho", desc: "Mecanismo analógico completo o capuchón original. Restaura el centrado y precisión en cámara." },
+    "puerto_usbc": { name: "Puerto de Carga / USB", desc: "Puerto físico reforzado. Elimina falsos contactos al recargar o conectar por cable." },
+    "dpad": { name: "D-Pad (Cruceta)", desc: "Cruceta direccional y domos metálicos mecánicos para una precisión perfecta por pulsación." },
+    "lb_l1": { name: "Bumper L1 / LB", desc: "Microswitch interno táctil superior izquierdo. Devuelve la pulsación elástica e inmediata." },
+    "rb_r1": { name: "Bumper R1 / RB", desc: "Microswitch interno táctil superior derecho. Devuelve la pulsación elástica e inmediata." },
+    "lt_l2": { name: "Gatillo L2 / LT", desc: "Sensor magnético de recorrido lineal o gatillo de plástico izquierdo." },
+    "rt_r2": { name: "Gatillo R2 / RT", desc: "Sensor magnético de recorrido lineal o gatillo de plástico derecho." },
+    "home_btn": { name: "Botón Home / Guía / Central", desc: "Módulo central de encendido, botones secundarios e iluminación LED decorativa." },
+    "membrana": { name: "Gomas Conductivas / Botones", desc: "Almohadillas elásticas intermedias que devuelven el rebote físico original de los botones frontales." },
+    "flex_principal": { name: "Placa Base / Circuitos Internos", desc: "Estructura lógica interna, limpieza general profunda o reparaciones complejas de encendido." }
+};
+
+let m=document.getElementById("mando");
+let containerServicios=document.getElementById("serviciosContainer");
+let descuentoRow=document.getElementById("descuentoRow");
+let descuentoMonto=document.getElementById("descuentoMonto");
+
+let precioElement = document.getElementById("precio");
+let tiempoElement = document.getElementById("tiempo");
+let totalElement = document.getElementById("total");
+
+Object.keys(data).forEach(x=>{
+    let o=document.createElement("option");
+    o.value=x;
+    o.textContent=x;
+    m.appendChild(o);
+});
+
+function loadServices() {
+    const modeloSeleccionado = m.value;
+    document.getElementById("mandoImg").src = imagenes[modeloSeleccionado] || "xbox-one.png";
+    containerServicios.innerHTML = "";
+    
+    if(!data[modeloSeleccionado]) return;
+    
+    data[modeloSeleccionado].forEach((servicio, index) => {
+        const div = document.createElement("div");
+        div.className = "service-item";
+        
+        const chk = document.createElement("input");
+        chk.type = "checkbox";
+        chk.id = `serv_${index}`;
+        chk.dataset.precio = servicio[1];
+        chk.dataset.tiempo = servicio[2];
+        chk.dataset.tags = servicio[3] || "";
+        chk.dataset.name = servicio[0];
+        chk.onchange = calculateTotal;
+        
+        const details = document.createElement("div");
+        details.className = "service-details";
+        
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "service-name";
+        nameSpan.textContent = servicio[0];
+        
+        const priceSpan = document.createElement("span");
+        priceSpan.className = "service-price";
+        priceSpan.textContent = `$${servicio[1]}`;
+        
+        details.appendChild(nameSpan);
+        details.appendChild(priceSpan);
+        div.appendChild(chk);
+        div.appendChild(details);
+        
+        div.onclick = (e) => {
+            if(e.target !== chk) {
+                chk.checked = !chk.checked;
+                calculateTotal();
+            }
+        };
+        
+        containerServicios.appendChild(div);
+    });
+    
+    calculateTotal();
+}
+
+function calculateTotal() {
+    let subtotal = 0;
+    let minutosTotales = 0;
+    let horasTotales = 0;
+    let serviciosSeleccionadosTags = [];
+    
+    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(chk => {
+        if(chk.checked) {
+            subtotal += parseFloat(chk.dataset.precio);
+            
+            const tiempoStr = chk.dataset.tiempo;
+            if(tiempoStr.includes("min")) {
+                minutosTotales += parseInt(tiempoStr);
+            } else if(tiempoStr.includes("hr") || tiempoStr.includes("hrs")) {
+                horasTotales += parseFloat(tiempoStr);
+            }
+            
+            if(chk.dataset.tags) {
+                serviciosSeleccionadosTags.push(...chk.dataset.tags.split(","));
+            }
+        }
+    });
+    
+    // Actualizar estados visuales de los hotspots basados en selección
+    document.querySelectorAll('.hotspot').forEach(hotspot => {
+        const compTag = hotspot.dataset.comp;
+        if(serviciosSeleccionadosTags.includes(compTag)) {
+            hotspot.classList.add('selected');
+        } else {
+            hotspot.classList.remove('selected');
+        }
+    });
+    
+    // Calcular descuento si hay más de 1 servicio
+    let countChecked = Array.from(checkboxes).filter(c => c.checked).length;
+    let descuento = 0;
+    if(countChecked >= 2) {
+        descuento = subtotal * 0.10;
+        descuentoRow.style.display = "block";
+        descuentoMonto.textContent = `-$${descuento.toFixed(0)}`;
+    } else {
+        descuentoRow.style.display = "none";
+    }
+    
+    let total = subtotal - descuento;
+    
+    precioElement.textContent = `$${subtotal}`;
+    totalElement.textContent = `$${total.toFixed(0)}`;
+    
+    // Formatear tiempo
+    if(minutosTotales >= 60) {
+        horasTotales += Math.floor(minutosTotales / 60);
+        minutosTotales = minutosTotales % 60;
+    }
+    
+    let tiempoFormateado = "";
+    if(horasTotales > 0) {
+        tiempoFormateado += `${horasTotales} hr${horasTotales > 1 ? 's' : ''} `;
+    }
+    if(minutosTotales > 0) {
+        tiempoFormateado += `${minutosTotales} min`;
+    }
+    if(tiempoFormateado === "") {
+        tiempoFormateado = "-";
+    }
+    
+    tiempoElement.textContent = tiempoFormateado;
+}
+
+// Configurar interactividad de Hotspots en el SVG provisto
+document.querySelectorAll('.hotspot').forEach(hotspot => {
+    const compKey = hotspot.dataset.comp;
+    const info = HOTSPOT_META_INFO[compKey];
+    
+    if(info) {
+        hotspot.onmouseenter = () => {
+            document.getElementById("componentVisualCard").innerHTML = `
+                <div style="font-weight:600; color:#00f2fe; margin-bottom:4px;">${info.name}</div>
+                <div style="color:#a0aec0; font-size:12px;">${info.desc}</div>
+            `;
+        };
+        
+        hotspot.onmouseleave = () => {
+            document.getElementById("componentVisualCard").innerHTML = `
+                <div style="color: #707e94; font-size:13px; text-align:center; padding:10px 0;">
+                    Pasa el cursor o presiona un componente para inspección técnica detallada...
+                </div>
+            `;
+        };
+        
+        hotspot.onclick = (e) => {
+            e.stopPropagation();
+            // Buscar si hay algún servicio asociado a este tag y activarlo
+            const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
+            let alternado = false;
+            
+            checkboxes.forEach(chk => {
+                if(chk.dataset.tags && chk.dataset.tags.split(",").includes(compKey)) {
+                    chk.checked = !chk.checked;
+                    alternado = true;
+                }
+            });
+            
+            if(alternado) {
+                calculateTotal();
+            }
+        };
+    }
+});
+
+function sendWA() {
+    const modelo = m.value;
+    const cliente = document.getElementById("cliente").value || "Cliente";
+    const obs = document.getElementById("obs").value || "Sin notas adicionales.";
+    const total = totalElement.textContent;
+    const tiempo = tiempoElement.textContent;
+    
+    let serviciosList = "";
+    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(chk => {
+        if(chk.checked) {
+            serviciosList += `- ${chk.dataset.name} ($${chk.dataset.precio})
+`;
+        }
+    });
+    
+    if(serviciosList === "") {
+        alert("Por favor selecciona al menos un servicio.");
+        return;
+    }
+    
+    const textoMensaje = `🛠️ *XE Servicio Electrónico - Presupuesto Mando*
+
+` +
+                         `👤 *Cliente:* ${cliente}
+` +
+                         `🎮 *Mando:* ${modelo}
+
+` +
+                         `📋 *Servicios solicitados:*
+${serviciosList}
+` +
+                         `⏱️ *Tiempo estimado:* ${tiempo}
+` +
+                         `📝 *Notas/Falla:* ${obs}
+
+` +
+                         `💰 *TOTAL ESTIMADO:* ${total}
+
+` +
+                         `_Garantía y Calidad XE Electrónica_`;
+                         
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoMensaje)}`;
+    window.open(url, '_blank');
+}
+
+// Inicialización inicial
+loadServices();
+</script>
+</body>
+</html>
