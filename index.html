@@ -58,7 +58,7 @@ padding:4px;
 border-radius:20px;
 }
 
-/* LOGO ÍCONO XE (SIN TÍTULOS Y CENTRADO) */
+/* LOGO ÍCONO XE */
 .logo{
 text-align:center;
 padding: 20px 0;
@@ -123,7 +123,7 @@ display: block;
 font-size: 11px;
 text-transform: uppercase;
 letter-spacing: 1.5px;
-color: #00f2fe; /* Acento Cian en etiquetas */
+color: #00f2fe;
 margin-top: 20px;
 margin-bottom: 8px;
 font-weight: 600;
@@ -265,7 +265,6 @@ color: white;
 transform: translateY(-1px);
 }
 
-/* BOTÓN DE UBICACIÓN DESTACADO EN CIAN */
 .btn-geo {
 background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
 color: #00f2fe;
@@ -277,7 +276,6 @@ box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
 transform: translateY(-2px);
 }
 
-/* GRID DE REDES SOCIALES ABAJO */
 .social-grid {
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;
@@ -290,7 +288,7 @@ padding: 12px;
 font-size: 12px;
 }
 
-/* RESULTADOS INTERFAZ DE ALTA GAMA */
+/* RESULTADOS INTERFAZ */
 .result{
 background: linear-gradient(135deg, rgba(0, 114, 255, 0.1) 0%, rgba(0, 242, 254, 0.05) 100%);
 border: 1px solid rgba(0, 242, 254, 0.2);
@@ -510,6 +508,7 @@ body { padding: 10px; }
     </div> 
 </div>
 
+<!-- SECCIÓN 1: COTIZADOR DE CONSOLAS -->
 <div class="card" id="cardConsolas">
 <h3 style="color: #00f2fe; font-size: 15px; font-weight: 600; text-transform: uppercase; margin-top: 0;">🎮 Cotizador de Consolas</h3>
 
@@ -535,30 +534,40 @@ body { padding: 10px; }
 <button class="pay" onclick="agendar()">💳 Anticipo y agendar</button>
 </div>
 
+<!-- SECCIÓN 2: COTIZADOR DE CONTROLES PREMIUM INTERACTIVO -->
 <div class="card" id="cardControles">
 <h3 style="color: #00f2fe; font-size: 15px; font-weight: 600; text-transform: uppercase; margin-top: 0;">🕹 Cotizador de Controles</h3>
 
 <label>Modelo de Control</label>
 <select id="mando" onchange="loadMandoServices()"></select>
 
+<!-- DIAGNÓSTICO VISUAL: CONTROL INTERACTIVO IDÉNTICO -->
 <label>🗺️ Diagnóstico Visual (Toca la pieza dañada)</label>
 <div class="interactive-viewer-box">
     <div class="svg-viewport-wrapper">
         <svg viewBox="0 0 400 400" width="100%" height="100%">
+            <!-- Silueta exterior del control base -->
             <path class="control-contour" d="M 80 140 C 130 110, 270 110, 320 140 C 370 170, 370 240, 340 310 C 320 350, 290 350, 270 310 C 250 270, 150 270, 130 310 C 110 350, 80 350, 60 310 C 30 240, 30 170, 80 140 Z" />
             <path class="control-contour" d="M 60 220 C 130 240, 270 240, 340 220" />
             
+            <!-- Gatillo Izquierdo -->
             <rect class="hotspot" x="135" y="25" width="22" height="38" rx="11" data-comp="lt_l2" />
+            <!-- Bumper Izquierdo -->
             <rect class="hotspot" x="125" y="72" width="42" height="13" rx="6.5" data-comp="lb_l1" />
             
+            <!-- Gatillo Derecho -->
             <rect class="hotspot" x="243" y="25" width="22" height="38" rx="11" data-comp="rt_r2" />
+            <!-- Bumper Derecho -->
             <rect class="hotspot" x="233" y="72" width="42" height="13" rx="6.5" data-comp="rb_r1" />
             
+            <!-- Joystick Izquierdo -->
             <circle class="hotspot" cx="120" cy="170" r="28" data-comp="joystick_izq" />
             
+            <!-- Botones centrales -->
             <circle class="hotspot" cx="175" cy="175" r="9" data-comp="home_btn" />
             <circle class="hotspot" cx="225" cy="175" r="9" data-comp="home_btn" />
             
+            <!-- Botones de Acción ABXY -->
             <g class="hotspot" data-comp="membrana">
                 <circle cx="280" cy="170" r="30" fill="transparent" stroke="none" style="pointer-events:none;"/>
                 <circle cx="280" cy="150" r="9" stroke="inherit" fill="inherit" />
@@ -567,6 +576,7 @@ body { padding: 10px; }
                 <circle cx="280" cy="190" r="9" stroke="inherit" fill="inherit" />
             </g>
             
+            <!-- D-Pad / Cruceta Dirección -->
             <g class="hotspot" data-comp="dpad">
                 <circle cx="165" cy="245" r="28" fill="transparent" stroke="none" style="pointer-events:none;"/>
                 <path d="M 165 222 C 158 228, 158 238, 150 245 C 158 252, 158 262, 165 268 C 172 262, 172 252, 180 245 C 172 238, 172 228, 165 222 Z" stroke="inherit" fill="inherit" />
@@ -576,6 +586,7 @@ body { padding: 10px; }
                 <circle cx="165" cy="260" r="5" stroke="inherit" fill="inherit"/>
             </g>
             
+            <!-- Joystick Derecho -->
             <circle class="hotspot" cx="240" cy="245" r="28" data-comp="joystick_der" />
         </svg>
     </div>
@@ -586,6 +597,7 @@ body { padding: 10px; }
     </div>
 </div>
 
+<!-- ADVERTENCIA DE SELECCIÓN COMPUESTA -->
 <div class="warning-box" id="warningMandoServicios">
     ⚠️ <strong>¡Aviso de revisión!</strong> Has seleccionado más de un servicio. Si alguna función interactiva marcó dos opciones por error (ej: Joystick original + Gomas), por favor <strong>desmarca el servicio que no deseas</strong> para asegurar tu cotización exacta.
 </div>
@@ -609,12 +621,13 @@ body { padding: 10px; }
 <button class="wa" onclick="sendMandoWA()">📲 Enviar Presupuesto de Control por WhatsApp</button>
 </div>
 
+<!-- ENLACES ADICIONALES Y BOTÓN DE UBICACIÓN -->
 <div class="card" style="margin-top: 0; padding-top: 10px;">
 <button class="link" onclick="abrirTester()">
-🎮 Tester de Controles (Sincronización)
+    🎮 Tester de Controles (Sincronización)
 </button>
 
-<a href="https://maps.google.com/?q=Irving+Daniel+Sánchez+Nava" target="_blank" class="btn-link-action btn-geo">📍 Ver nuestra ubicación en Google Maps</a>
+<a href="https://maps.app.goo.gl/x9gqptSPo6yqdxF1A" target="_blank" class="btn-link-action btn-geo">📍 Ver nuestra ubicación en Google Maps</a>
 
 <div class="social-grid">
     <a href="https://www.facebook.com/share/1BRU5UUK5c/" target="_blank" class="btn-link-action link">Facebook</a>
@@ -643,9 +656,7 @@ body { padding: 10px; }
 </div>
 
 <div class="paybox">
-
 <h3>💳 Datos de pago</h3>
-
 <div class="payment-grid">
     <div class="payment-method">
         <h4>🏦 Banorte</h4>
@@ -658,13 +669,10 @@ body { padding: 10px; }
         <p>Irving Daniel Sánchez Nava</p>
     </div>
 </div>
-
 <hr>
-
 <p style="color:#00f2fe; text-align: center; margin-bottom: 0; font-size: 14px; font-weight: 400;">
 Envía comprobante por WhatsApp para confirmar cita
 </p>
-
 </div>
 
 </div>
@@ -675,20 +683,4 @@ let currentRating = 0;
 // DATOS CONSOLAS
 const data = {
 "Xbox One":[
-    ["Revisión / Diagnóstico",200,"1 a 2 días"],
-    ["Mantenimiento",600,"1 Hora"],
-    ["Cambio ventilador",400,"15 Min"],
-    ["Cambio módulo inalámbrico",400,"15 Min"],
-    ["Panel frontal",600,"15 Min"],
-    ["MOSFET",900,"1 Hora"],
-    ["Realtek",900,"40 Min"],
-    ["Filtros o ESD",900,"1 Hora"],
-    ["HDMI",900,"1 Hora"],
-    ["IC Power",1000,"1 Hora"]
-],
-"Xbox One S":[
-    ["Revisión / Diagnóstico",200,"1 a 2 días"],
-    ["Mantenimiento",600,"1 Hora"],
-    ["Ventilador",500,"15 Min"],
-    ["Módulo inalámbrico",500,"15 Min"],
-    ["Pane
+    ["Revisión / Diagnóstico",200,"1 a 
