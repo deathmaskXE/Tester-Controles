@@ -81,7 +81,7 @@ transition: all 0.5s ease;
 .console-box img{ 
 width:260px; 
 max-width:100%; 
-transition: all 0.35s ease; 
+transition: opacity 0.15s ease, transform 0.15s ease; 
 filter:drop-shadow(0 15px 25px rgba(0,0,0,0.8)); 
 } 
 
@@ -391,6 +391,7 @@ function calc(){
     }
 }
 
+// Envío limpio estructurado para WhatsApp
 function sendWA(){
     let msg=`🎮 XE SERVICIO ELECTRÓNICO\n🕹 COTIZACIÓN DE CONTROL\n\n👤 Cliente: ${cliente.value}\n🎮 Mando: ${m.value}\n🔧 Falla: ${s.value}\n\n💰 Costo: ${total.innerText}\n⏱ Tiempo: ${tiempo.innerText}\n\n📝 Notas: ${obs.value}`;
     window.open("https://wa.me/527471731852?text="+encodeURIComponent(msg));
