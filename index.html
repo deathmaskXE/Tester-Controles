@@ -504,8 +504,10 @@ let containerServicios=document.getElementById("serviciosContainer");
 let descuentoRow=document.getElementById("descuentoRow");
 let descuentoMonto=document.getElementById("descuentoMonto");
 
-let precioElement = document.getElementById("precio");
-let tiempoElement = document.getElementById("tiempo");
-let totalElement = document.getElementById("total");
+let promoAplicadaText = "";
 
-let promoAplicadaText 
+// Llenar el select con los modelos disponibles
+Object.keys(data).forEach(x=>{
+    let o=document.createElement("option");
+    o.value=x;
+    o.textContent=x
