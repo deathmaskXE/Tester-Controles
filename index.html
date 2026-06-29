@@ -499,15 +499,12 @@ const HOTSPOT_META_INFO = {
     "flex_principal": { name: "Placa Lógica / Circuitos Integrados", desc: "Matriz conductora electrónica general, controladores integrados y distribución de voltajes internos." }
 };
 
-let m=document.getElementById("mando");
-let containerServicios=document.getElementById("serviciosContainer");
-let descuentoRow=document.getElementById("descuentoRow");
-let descuentoMonto=document.getElementById("descuentoMonto");
-
+let m, containerServicios, descuentoRow, descuentoMonto;
 let promoAplicadaText = "";
 
-// Llenar el select con los modelos disponibles
-Object.keys(data).forEach(x=>{
-    let o=document.createElement("option");
-    o.value=x;
-    o.textContent=x
+// SOLUCIÓN DEFINITIVA: Carga inmediata e independiente de imágenes externas
+document.addEventListener("DOMContentLoaded", function() {
+    m = document.getElementById("mando");
+    containerServicios = document.getElementById("serviciosContainer");
+    descuentoRow = document.getElementById("descuentoRow");
+    descuentoMonto = 
