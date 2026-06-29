@@ -254,30 +254,24 @@ align-items: center;
 }
 
 .hotspot {
-    fill: none;
-    stroke: rgba(0, 242, 254, 0.4);
-    stroke-width: 2;
+    fill: rgba(0, 242, 254, 0.04);
+    stroke: rgba(0, 242, 254, 0.3);
+    stroke-width: 1.8;
     cursor: pointer;
     pointer-events: auto; /* Asegura captura de eventos touch */
     transition: all 0.2s ease;
 }
 
 .hotspot:hover, .hotspot:active {
-    fill: rgba(0, 242, 254, 0.15);
+    fill: rgba(0, 242, 254, 0.2);
     stroke: #00f2fe;
     filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.7));
 }
 
 .hotspot.selected {
-    fill: rgba(0, 114, 255, 0.35);
+    fill: rgba(0, 114, 255, 0.4);
     stroke: #0072ff;
     filter: drop-shadow(0 0 12px rgba(0, 114, 255, 0.9));
-}
-
-.control-base-line {
-    stroke: rgba(226, 232, 240, 0.25);
-    stroke-width: 2;
-    fill: none;
 }
 
 .component-info-card {
@@ -341,53 +335,7 @@ align-items: center;
 <!-- MAPA INTERACTIVO DE EXPLOSIÓN DE PIEZAS -->
 <label>🗺️ Diagnóstico Visual (Toca la pieza dañada)</label>
 <div class="interactive-viewer-box">
-    <div class="svg-viewport-wrapper" id="svgInteractiveContainer">
-        <!-- SVG interactivo basado exactamente en la imagen provista -->
-        <svg viewBox="0 0 400 400" width="100%" height="100%">
-            <!-- Silueta base gris tenue -->
-            <path class="control-base-line" d="M 90 210 Q 60 270 60 330 Q 60 360 90 360 Q 130 360 150 310 L 160 290 L 240 290 L 250 310 Q 270 360 310 360 Q 340 360 340 330 Q 340 270 310 210 Q 280 150 200 150 Q 120 150 90 210 Z" stroke-dasharray="3 3"/>
-            <path class="control-base-line" d="M 90 210 Q 150 250 200 250 Q 250 250 310 210" opacity="0.3"/>
-            
-            <!-- Componentes interactivos mapeados (Hotspots con la forma exacta de la imagen) -->
-            <!-- Gatillo Izquierdo (Arriba Izquierda Exterior) -->
-            <path id="hotspot_lt_l2" class="hotspot" d="M 130 50 Q 130 30 145 30 Q 160 30 160 50 Q 160 80 145 80 Q 130 80 130 50 Z" data-comp="lt_l2"/>
-            <!-- Bumper Izquierdo (Arriba Izquierda Interior) -->
-            <rect id="hotspot_lb_l1" class="hotspot" x="120" y="95" width="45" height="15" rx="7" data-comp="lb_l1"/>
-            
-            <!-- Gatillo Derecho (Arriba Derecha Exterior) -->
-            <path id="hotspot_rt_r2" class="hotspot" d="M 240 50 Q 240 30 255 30 Q 270 30 270 50 Q 270 80 255 80 Q 240 80 240 50 Z" data-comp="rt_r2"/>
-            <!-- Bumper Derecho (Arriba Derecha Interior) -->
-            <rect id="hotspot_rb_r1" class="hotspot" x="235" y="95" width="45" height="15" rx="7" data-comp="rb_r1"/>
-            
-            <!-- Joystick Izquierdo (Arriba Izquierda del cuerpo) -->
-            <circle id="hotspot_joystick_izq" class="hotspot" cx="130" cy="200" r="28" data-comp="joystick_izq"/>
-            
-            <!-- Botones Centrales (Select / Start) -->
-            <circle id="hotspot_home_btn" class="hotspot" cx="180" cy="200" r="10" data-comp="home_btn"/>
-            <circle id="hotspot_flex_principal" class="hotspot" cx="220" cy="200" r="10" data-comp="flex_principal"/>
-            
-            <!-- Botones de Acción (Arriba Derecha del cuerpo) -->
-            <g id="hotspot_botones_action" class="hotspot" data-comp="membrana">
-                <circle cx="280" cy="200" r="28" fill="transparent" stroke="none" style="pointer-events:none;"/>
-                <path d="M 280 175 Q 270 185 280 190 Q 290 185 280 175 Z" stroke="inherit" fill="inherit"/>
-                <path d="M 280 225 Q 270 215 280 210 Q 290 215 280 225 Z" stroke="inherit" fill="inherit"/>
-                <path d="M 255 200 Q 265 190 270 200 Q 265 210 255 200 Z" stroke="inherit" fill="inherit"/>
-                <path d="M 305 200 Q 295 190 290 200 Q 295 210 305 200 Z" stroke="inherit" fill="inherit"/>
-            </g>
-            
-            <!-- D-Pad / Cruceta (Abajo Izquierda del cuerpo) -->
-            <g id="hotspot_dpad" class="hotspot" data-comp="dpad">
-                <circle cx="170" cy="260" r="25" fill="transparent" stroke="none" style="pointer-events:none;"/>
-                <path d="M 170 240 Q 162 248 170 252 Q 178 248 170 240 Z" stroke="inherit" fill="inherit"/>
-                <path d="M 170 280 Q 162 272 170 268 Q 178 272 170 280 Z" stroke="inherit" fill="inherit"/>
-                <path d="M 150 260 Q 158 252 162 260 Q 158 268 150 260 Z" stroke="inherit" fill="inherit"/>
-                <path d="M 190 260 Q 182 252 178 260 Q 182 268 190 260 Z" stroke="inherit" fill="inherit"/>
-            </g>
-            
-            <!-- Joystick Derecho (Abajo Derecha del cuerpo) -->
-            <circle id="hotspot_joystick_der" class="hotspot" cx="250" cy="260" r="28" data-comp="joystick_der"/>
-        </svg>
-    </div>
+    <div class="svg-viewport-wrapper" id="svgInteractiveContainer"></div>
     <div class="component-info-card" id="componentVisualCard">
         <div style="color: #707e94; font-size:13px; text-align:center; padding:10px 0;">
             Pasa el cursor o presiona un componente para inspección técnica detallada...
@@ -419,7 +367,7 @@ align-items: center;
 <script>
 const data = {
 "Control Xbox One (Fat/S/X)":[
-    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Goma conductiva (botones)", 250, "10 min", "membrana"],
     ["D-pad", 150, "10 min", "dpad"],
     ["Bumper LB y RB", 250, "10 min", "lb_l1,rb_r1"],
@@ -434,12 +382,13 @@ const data = {
     ["Cambio de placa Power", 450, "15 min", "flex_principal"],
     ["Cambio de placa Control", 500, "10 min", "flex_principal"],
     ["Reparación Bluetooth", 450, "25 min", "flex_principal"],
+    ["Reballing Microprocesador", 500, "3 hrs", "flex_principal"],
     ["Cambio de color de led", 50, "10 min", "home_btn"],
     ["Cambio de carcasa frontal", 300, "10 min", "flex_principal"]
 ],
 "Control Xbox Series (S/X)":[
-    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Goma conductiva botones", 250, "10 min", "membrana"],
     ["Bumper LB y RB", 250, "5 min", "lb_l1,rb_r1"],
     ["Microswich LB y RB", 250, "15 min", "lb_l1,rb_r1"],
@@ -451,13 +400,14 @@ const data = {
     ["Cambio de placa Power", 480, "10 min", "flex_principal"],
     ["Cambio de placa joysticks", 600, "10 min", "flex_principal"],
     ["Fallas de Bluetooth", 450, "2 hrs", "flex_principal"],
+    ["Reballing a microprocesador", 550, "4 hrs", "flex_principal"],
     ["Capuchon original par (gomas)", 60, "5 min", "joystick_izq,joystick_der"],
     ["Cambio de color led", 60, "10 min", "home_btn"],
     ["Cambio de carcasa frontal", 450, "10 min", "flex_principal"]
 ],
 "Control Xbox Elite Series 2":[
-    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Goma conductiva botones", 250, "10 min", "membrana"],
     ["Bumper LB y RB", 250, "5 min", "lb_l1,rb_r1"],
     ["Microswich LB y RB", 250, "15 min", "lb_l1,rb_r1"],
@@ -465,8 +415,8 @@ const data = {
     ["Falla en Palancas Traseras (Paddles)", 300, "40 min", "flex_principal"]
 ],
 "Control PS4 (DualShock 4)":[
-    ["Joystick", 300, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Membrana de botones", 300, "20 min", "flex_principal"],
     ["Goma condutivas", 200, "10 min", "membrana"],
     ["Gatillo aptico", 450, "1 hr", "lt_l2,rt_r2"],
@@ -477,12 +427,12 @@ const data = {
     ["Corto en placa", 500, "2 hrs", "flex_principal"]
 ],
 "Control PS5 DualSense":[
-    ["Joystick", 300, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Membrana de botones", 250, "20 min", "flex_principal"],
     ["Goma conductiva", 200, "10 min", "membrana"],
-    ["Motor adaptativo", 450, "1 hr", "flex_principal"],
-    ["Motor aptico", 450, "1 hr", "flex_principal"],
+    ["Motor adaptativo", 450, "1 hr", "motor_gatillo_l2,motor_gatillo_r2"],
+    ["Motor aptico", 450, "1 hr", "actuador_haptico"],
     ["Gatillo aptico", 450, "1 hr", "lt_l2,rt_r2"],
     ["Flex gatillo", 300, "5 min", "lt_l2,rt_r2"],
     ["Centro de carga tipo C", 300, "30 min", "puerto_usbc"],
@@ -491,26 +441,26 @@ const data = {
     ["Corto en placa", 500, "2 hrs", "flex_principal"]
 ],
 "Control PS5 DualSense Edge":[
-    ["Joystick original", 450, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 600, "10 min", "joystick_izq,joystick_der"],
-    ["Gatillo adaptative", 700, "1 hr", "lt_l2,rt_r2"],
-    ["Motor adaptativo", 700, "1 hr", "flex_principal"],
-    ["Motor haptico", 450, "30 min", "flex_principal"],
+    ["Joystick original", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 600, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Gatillo adaptative", 700, "1 hr", "lt_l2,rt_r2,motor_gatillo_l2,motor_gatillo_r2"],
+    ["Motor adaptativo", 700, "1 hr", "motor_gatillo_l2,motor_gatillo_r2"],
+    ["Motor haptico", 450, "30 min", "actuador_haptico"],
     ["Membrana de botones", 500, "1 hr", "flex_principal"],
     ["Jack de audífonos", 450, "45 min", "flex_principal"],
     ["Pmic", 1500, "1 hr", "flex_principal"]
 ],
 "Nintendo Switch (Joy-Con)":[
-    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Flex vinculación inalámbrica", 350, "10 min", "flex_principal"],
     ["Riel", 400, "10 min", "flex_principal"],
-    ["Batería", 400, "5 min", "flex_principal"],
+    ["Batería", 400, "5 min", "bateria"],
     ["Carcasa", 280, "20 min", "flex_principal"]
 ],
 "Nintendo Switch Pro Controller":[
-    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der"],
-    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der"],
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
     ["Puerto de carga", 400, "30 min", "puerto_usbc"],
     ["Goma conductiva", 300, "15 min", "membrana"],
     ["Corto en placa", 450, "2 hrs", "flex_principal"]
@@ -529,17 +479,25 @@ const imagenes = {
 }; 
 
 const HOTSPOT_META_INFO = {
-    "joystick_izq": { name: "Joystick Izquierdo", desc: "Mecanismo analógico completo o capuchón original. Corrige desviaciones no deseadas o drift." },
-    "joystick_der": { name: "Joystick Derecho", desc: "Mecanismo analógico completo o capuchón original. Restaura el centrado y precisión en cámara." },
-    "puerto_usbc": { name: "Puerto de Carga / USB", desc: "Puerto físico reforzado. Elimina falsos contactos al recargar o conectar por cable." },
-    "dpad": { name: "D-Pad (Cruceta)", desc: "Cruceta direccional y domos metálicos mecánicos para una precisión perfecta por pulsación." },
-    "lb_l1": { name: "Bumper L1 / LB", desc: "Microswitch interno táctil superior izquierdo. Devuelve la pulsación elástica e inmediata." },
-    "rb_r1": { name: "Bumper R1 / RB", desc: "Microswitch interno táctil superior derecho. Devuelve la pulsación elástica e inmediata." },
-    "lt_l2": { name: "Gatillo L2 / LT", desc: "Sensor magnético de recorrido lineal o gatillo de plástico izquierdo." },
-    "rt_r2": { name: "Gatillo R2 / RT", desc: "Sensor magnético de recorrido lineal o gatillo de plástico derecho." },
-    "home_btn": { name: "Botón Home / Guía / Central", desc: "Módulo central de encendido, botones secundarios e iluminación LED decorativa." },
-    "membrana": { name: "Gomas Conductivas / Botones", desc: "Almohadillas elásticas intermedias que devuelven el rebote físico original de los botones frontales." },
-    "flex_principal": { name: "Placa Base / Circuitos Internos", desc: "Estructura lógica interna, limpieza general profunda o reparaciones complejas de encendido." }
+    "joystick_izq": { name: "Joystick Izquierdo", desc: "Mecanismo analógico completo. Corrige desviaciones no deseadas o tirones en el juego." },
+    "joystick_der": { name: "Joystick Derecho", desc: "Mecanismo analógico completo. Restaura el centrado y suavidad de la cámara de juego." },
+    "potenciometro_izq": { name: "Potenciómetro Izquierdo", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y izquierdo." },
+    "potenciometro_der": { name: "Potenciómetro Derecho", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y derecho." },
+    "puerto_usbc": { name: "Puerto de Carga / USB-C", desc: "Puerto físico reforzado. Elimina falsos contactos al energizar o sincronizar el control." },
+    "dpad": { name: "D-Pad (Cruceta)", desc: "Domos de contacto y cruceta direccional mecánica para una precisión perfecta por pulsación." },
+    "botones_action": { name: "Botones Principales", desc: "Puntos de contacto frontales (A,B,X,Y / Figuras). Resuelve botones pegados o rotos." },
+    "lb_l1": { name: "Bumper / Interruptor L1-LB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
+    "rb_r1": { name: "Bumper / Interruptor R1-RB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
+    "lt_l2": { name: "Gatillo Lineal L2-LT", desc: "Sensor magnético de recorrido lineal o potenciómetro mecánico según la arquitectura del mando." },
+    "rt_r2": { name: "Gatillo Lineal R2-RT", desc: "Sensor magnético de recorrido lineal o potenciómetro mecánico según la arquitectura del mando." },
+    "home_btn": { name: "Botón Home / Guía", desc: "Módulo central de encendido e iluminación LED decorativa o indicadora." },
+    "touchpad": { name: "Panel Touchpad Central", desc: "Superficie táctil digital capacitiva y flex conector intermedio exclusivo de Sony." },
+    "bateria": { name: "Batería / Gestión de Energía", desc: "Celda de Litio recargable o pines estructurales de alimentación primaria." },
+    "actuador_haptico": { name: "Actuador Háptico HD", desc: "Motores avanzados de vibración de bobina por software lineal de alta fidelidad." },
+    "motor_gatillo_l2": { name: "Motor Adaptativo Izquierdo", desc: "Engranaje interno y motor de fuerza variable para simular tensión real en el gatillo." },
+    "motor_gatillo_r2": { name: "Motor Adaptativo Derecho", desc: "Engranaje interno y motor de fuerza variable para simular tensión real en el gatillo." },
+    "membrana": { name: "Membrana de Silicón Conductivo", desc: "Almohadillas elásticas intermedias que devuelven el rebote físico original de los botones." },
+    "flex_principal": { name: "Placa Base / Flex Principal", desc: "Estructura interna, circuitos lógicos integrados, PMIC y líneas de datos generales." }
 };
 
 let m=document.getElementById("mando");
@@ -547,9 +505,12 @@ let containerServicios=document.getElementById("serviciosContainer");
 let descuentoRow=document.getElementById("descuentoRow");
 let descuentoMonto=document.getElementById("descuentoMonto");
 
+// Capturando elementos de texto que faltaban por ID en tu código original
 let precioElement = document.getElementById("precio");
 let tiempoElement = document.getElementById("tiempo");
 let totalElement = document.getElementById("total");
+
+let promoAplicadaText = "";
 
 Object.keys(data).forEach(x=>{
     let o=document.createElement("option");
@@ -558,214 +519,4 @@ Object.keys(data).forEach(x=>{
     m.appendChild(o);
 });
 
-function loadServices() {
-    const modeloSeleccionado = m.value;
-    document.getElementById("mandoImg").src = imagenes[modeloSeleccionado] || "xbox-one.png";
-    containerServicios.innerHTML = "";
-    
-    if(!data[modeloSeleccionado]) return;
-    
-    data[modeloSeleccionado].forEach((servicio, index) => {
-        const div = document.createElement("div");
-        div.className = "service-item";
-        
-        const chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.id = `serv_${index}`;
-        chk.dataset.precio = servicio[1];
-        chk.dataset.tiempo = servicio[2];
-        chk.dataset.tags = servicio[3] || "";
-        chk.dataset.name = servicio[0];
-        chk.onchange = calculateTotal;
-        
-        const details = document.createElement("div");
-        details.className = "service-details";
-        
-        const nameSpan = document.createElement("span");
-        nameSpan.className = "service-name";
-        nameSpan.textContent = servicio[0];
-        
-        const priceSpan = document.createElement("span");
-        priceSpan.className = "service-price";
-        priceSpan.textContent = `$${servicio[1]}`;
-        
-        details.appendChild(nameSpan);
-        details.appendChild(priceSpan);
-        div.appendChild(chk);
-        div.appendChild(details);
-        
-        div.onclick = (e) => {
-            if(e.target !== chk) {
-                chk.checked = !chk.checked;
-                calculateTotal();
-            }
-        };
-        
-        containerServicios.appendChild(div);
-    });
-    
-    calculateTotal();
-}
-
-function calculateTotal() {
-    let subtotal = 0;
-    let minutosTotales = 0;
-    let horasTotales = 0;
-    let serviciosSeleccionadosTags = [];
-    
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(chk => {
-        if(chk.checked) {
-            subtotal += parseFloat(chk.dataset.precio);
-            
-            const tiempoStr = chk.dataset.tiempo;
-            if(tiempoStr.includes("min")) {
-                minutosTotales += parseInt(tiempoStr);
-            } else if(tiempoStr.includes("hr") || tiempoStr.includes("hrs")) {
-                horasTotales += parseFloat(tiempoStr);
-            }
-            
-            if(chk.dataset.tags) {
-                serviciosSeleccionadosTags.push(...chk.dataset.tags.split(","));
-            }
-        }
-    });
-    
-    // Actualizar estados visuales de los hotspots basados en selección
-    document.querySelectorAll('.hotspot').forEach(hotspot => {
-        const compTag = hotspot.dataset.comp;
-        if(serviciosSeleccionadosTags.includes(compTag)) {
-            hotspot.classList.add('selected');
-        } else {
-            hotspot.classList.remove('selected');
-        }
-    });
-    
-    // Calcular descuento si hay más de 1 servicio
-    let countChecked = Array.from(checkboxes).filter(c => c.checked).length;
-    let descuento = 0;
-    if(countChecked >= 2) {
-        descuento = subtotal * 0.10;
-        descuentoRow.style.display = "block";
-        descuentoMonto.textContent = `-$${descuento.toFixed(0)}`;
-    } else {
-        descuentoRow.style.display = "none";
-    }
-    
-    let total = subtotal - descuento;
-    
-    precioElement.textContent = `$${subtotal}`;
-    totalElement.textContent = `$${total.toFixed(0)}`;
-    
-    // Formatear tiempo
-    if(minutosTotales >= 60) {
-        horasTotales += Math.floor(minutosTotales / 60);
-        minutosTotales = minutosTotales % 60;
-    }
-    
-    let tiempoFormateado = "";
-    if(horasTotales > 0) {
-        tiempoFormateado += `${horasTotales} hr${horasTotales > 1 ? 's' : ''} `;
-    }
-    if(minutosTotales > 0) {
-        tiempoFormateado += `${minutosTotales} min`;
-    }
-    if(tiempoFormateado === "") {
-        tiempoFormateado = "-";
-    }
-    
-    tiempoElement.textContent = tiempoFormateado;
-}
-
-// Configurar interactividad de Hotspots en el SVG provisto
-document.querySelectorAll('.hotspot').forEach(hotspot => {
-    const compKey = hotspot.dataset.comp;
-    const info = HOTSPOT_META_INFO[compKey];
-    
-    if(info) {
-        hotspot.onmouseenter = () => {
-            document.getElementById("componentVisualCard").innerHTML = `
-                <div style="font-weight:600; color:#00f2fe; margin-bottom:4px;">${info.name}</div>
-                <div style="color:#a0aec0; font-size:12px;">${info.desc}</div>
-            `;
-        };
-        
-        hotspot.onmouseleave = () => {
-            document.getElementById("componentVisualCard").innerHTML = `
-                <div style="color: #707e94; font-size:13px; text-align:center; padding:10px 0;">
-                    Pasa el cursor o presiona un componente para inspección técnica detallada...
-                </div>
-            `;
-        };
-        
-        hotspot.onclick = (e) => {
-            e.stopPropagation();
-            // Buscar si hay algún servicio asociado a este tag y activarlo
-            const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
-            let alternado = false;
-            
-            checkboxes.forEach(chk => {
-                if(chk.dataset.tags && chk.dataset.tags.split(",").includes(compKey)) {
-                    chk.checked = !chk.checked;
-                    alternado = true;
-                }
-            });
-            
-            if(alternado) {
-                calculateTotal();
-            }
-        };
-    }
-});
-
-function sendWA() {
-    const modelo = m.value;
-    const cliente = document.getElementById("cliente").value || "Cliente";
-    const obs = document.getElementById("obs").value || "Sin notas adicionales.";
-    const total = totalElement.textContent;
-    const tiempo = tiempoElement.textContent;
-    
-    let serviciosList = "";
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(chk => {
-        if(chk.checked) {
-            serviciosList += `- ${chk.dataset.name} ($${chk.dataset.precio})
-`;
-        }
-    });
-    
-    if(serviciosList === "") {
-        alert("Por favor selecciona al menos un servicio.");
-        return;
-    }
-    
-    const textoMensaje = `🛠️ *XE Servicio Electrónico - Presupuesto Mando*
-
-` +
-                         `👤 *Cliente:* ${cliente}
-` +
-                         `🎮 *Mando:* ${modelo}
-
-` +
-                         `📋 *Servicios solicitados:*
-${serviciosList}
-` +
-                         `⏱️ *Tiempo estimado:* ${tiempo}
-` +
-                         `📝 *Notas/Falla:* ${obs}
-
-` +
-                         `💰 *TOTAL ESTIMADO:* ${total}
-
-` +
-                         `_Garantía y Calidad XE Electrónica_`;
-                         
-    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoMensaje)}`;
-    window.open(url, '_blank');
-}
-
-// Inicialización inicial
-loadServices();
-</script>
-</body>
-</html>
+loadSe
