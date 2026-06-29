@@ -229,12 +229,85 @@ align-items: center;
 }
 .total span { color: #00f2fe; }
 
+/* ==========================================================================
+   NUEVOS ESTILOS OPTIMIZADOS PARA EXPLOSIÓN DE PIEZAS INTERACTIVA
+   ========================================================================== */
+.interactive-viewer-box {
+    background: linear-gradient(135deg, rgba(13, 15, 22, 0.95) 0%, rgba(6, 7, 11, 0.99) 100%);
+    border: 1px solid rgba(0, 242, 254, 0.15);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 15px 0 25px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.svg-viewport-wrapper {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    margin: auto;
+    position: relative;
+}
+
+/* Elementos activos del Vector SVG */
+.hotspot {
+    fill: rgba(0, 242, 254, 0.03);
+    stroke: rgba(0, 242, 254, 0.3);
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hotspot:hover {
+    fill: rgba(0, 242, 254, 0.18);
+    stroke: #00f2fe;
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+}
+
+.hotspot.selected {
+    fill: rgba(0, 114, 255, 0.35);
+    stroke: #0072ff;
+    filter: drop-shadow(0 0 12px rgba(0, 114, 255, 0.8));
+}
+
+/* Panel descriptivo flotante de componentes */
+.component-info-card {
+    width: 100%;
+    background: #080a0f;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.component-info-card.active {
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.05);
+}
+
+.zoom-lens-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border-left: 3px solid #00f2fe;
+}
+
 @media(max-width: 600px){
-body { padding: 10px; }
-.card { padding: 20px; }
-.console-box { width: 240px; height: 240px; }
-.console-box img { width: 190px; }
-.top-bar { display: none; }
+    body { padding: 10px; }
+    .card { padding: 20px; }
+    .console-box { width: 240px; height: 240px; }
+    .console-box img { width: 190px; }
+    .top-bar { display: none; }
+    .zoom-lens-container { flex-direction: column; align-items: flex-start; gap: 6px; }
 }
 </style>
 </head>
@@ -265,6 +338,16 @@ body { padding: 10px; }
 <label>Modelo de Control</label>
 <select id="mando" onchange="loadServices()"></select>
 
+<label>🗺️ Diagnóstico Visual (Toca la pieza dañada)</label>
+<div class="interactive-viewer-box">
+    <div class="svg-viewport-wrapper" id="svgInteractiveContainer"></div>
+    <div class="component-info-card" id="componentVisualCard">
+        <div style="color: #707e94; font-size:13px; text-align:center; padding:10px 0;">
+            Pasa el cursor o presiona un componente para inspección técnica detallada...
+        </div>
+    </div>
+</div>
+
 <label>Selecciona los Servicios Requeridos</label>
 <div class="services-checkbox-container" id="serviciosContainer"></div>
 
@@ -289,103 +372,103 @@ body { padding: 10px; }
 <script>
 const data = {
 "Control Xbox One (Fat/S/X)":[
-    ["Joystick original", 300, "10 min"],
-    ["Goma conductiva (botones)", 250, "10 min"],
-    ["D-pad", 150, "10 min"],
-    ["Bumper LB y RB", 250, "10 min"],
-    ["Gatillo hall interno", 250, "10 min"],
-    ["Gatillo plástico", 150, "15 min"],
-    ["Microswich LB y RB", 250, "10 min"],
-    ["Puerto de carga V8", 280, "30 min"],
-    ["Jack de auriculares", 200, "5 min"],
-    ["Capuchón original par (gomas)", 60, "5 min"],
-    ["Limpieza profunda", 80, "30 min"],
-    ["Reparación electrónica", 450, "2 hrs"],
-    ["Cambio de placa Power", 450, "15 min"],
-    ["Cambio de placa Control", 500, "10 min"],
-    ["Reparación Bluetooth", 450, "25 min"],
-    ["Reballing Microprocesador", 500, "3 hrs"],
-    ["Cambio de color de led", 50, "10 min"],
-    ["Cambio de carcasa frontal", 300, "10 min"]
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Goma conductiva (botones)", 250, "10 min", "membrana"],
+    ["D-pad", 150, "10 min", "dpad"],
+    ["Bumper LB y RB", 250, "10 min", "lb_l1,rb_r1"],
+    ["Gatillo hall interno", 250, "10 min", "lt_l2,rt_r2"],
+    ["Gatillo plástico", 150, "15 min", "lt_l2,rt_r2"],
+    ["Microswich LB y RB", 250, "10 min", "lb_l1,rb_r1"],
+    ["Puerto de carga V8", 280, "30 min", "puerto_usbc"],
+    ["Jack de auriculares", 200, "5 min", "flex_principal"],
+    ["Capuchón original par (gomas)", 60, "5 min", "joystick_izq,joystick_der"],
+    ["Limpieza profunda", 80, "30 min", "flex_principal"],
+    ["Reparación electrónica", 450, "2 hrs", "flex_principal"],
+    ["Cambio de placa Power", 450, "15 min", "flex_principal"],
+    ["Cambio de placa Control", 500, "10 min", "flex_principal"],
+    ["Reparación Bluetooth", 450, "25 min", "flex_principal"],
+    ["Reballing Microprocesador", 500, "3 hrs", "flex_principal"],
+    ["Cambio de color de led", 50, "10 min", "home_btn"],
+    ["Cambio de carcasa frontal", 300, "10 min", "flex_principal"]
 ],
 "Control Xbox Series (S/X)":[
-    ["Joystick original", 300, "10 min"],
-    ["Joystick TMR", 450, "10 min"],
-    ["Goma conductiva botones", 250, "10 min"],
-    ["Bumper LB y RB", 250, "5 min"],
-    ["Microswich LB y RB", 250, "15 min"],
-    ["Gatillo plástico", 150, "15 min"],
-    ["Gatillo hall interno", 300, "20 min"],
-    ["D-pad", 150, "10 min"],
-    ["Puerto tipo C", 300, "30 min"],
-    ["Fallas de encendido", 550, "3 hrs"],
-    ["Cambio de placa Power", 480, "10 min"],
-    ["Cambio de placa joysticks", 600, "10 min"],
-    ["Fallas de Bluetooth", 450, "2 hrs"],
-    ["Reballing a microprocesador", 550, "4 hrs"],
-    ["Capuchon original par (gomas)", 60, "5 min"],
-    ["Cambio de color led", 60, "10 min"],
-    ["Cambio de carcasa frontal", 450, "10 min"]
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Goma conductiva botones", 250, "10 min", "membrana"],
+    ["Bumper LB y RB", 250, "5 min", "lb_l1,rb_r1"],
+    ["Microswich LB y RB", 250, "15 min", "lb_l1,rb_r1"],
+    ["Gatillo plástico", 150, "15 min", "lt_l2,rt_r2"],
+    ["Gatillo hall interno", 300, "20 min", "lt_l2,rt_r2"],
+    ["D-pad", 150, "10 min", "dpad"],
+    ["Puerto tipo C", 300, "30 min", "puerto_usbc"],
+    ["Fallas de encendido", 550, "3 hrs", "bateria"],
+    ["Cambio de placa Power", 480, "10 min", "flex_principal"],
+    ["Cambio de placa joysticks", 600, "10 min", "flex_principal"],
+    ["Fallas de Bluetooth", 450, "2 hrs", "flex_principal"],
+    ["Reballing a microprocesador", 550, "4 hrs", "flex_principal"],
+    ["Capuchon original par (gomas)", 60, "5 min", "joystick_izq,joystick_der"],
+    ["Cambio de color led", 60, "10 min", "home_btn"],
+    ["Cambio de carcasa frontal", 450, "10 min", "flex_principal"]
 ],
 "Control Xbox Elite Series 2":[
-    ["Joystick original", 300, "10 min"],
-    ["Joystick TMR", 450, "10 min"],
-    ["Goma conductiva botones", 250, "10 min"],
-    ["Bumper LB y RB", 250, "5 min"],
-    ["Microswich LB y RB", 250, "15 min"],
-    ["Mantenimiento Completo y Limpieza", 200, "30 min"],
-    ["Falla en Palancas Traseras (Paddles)", 300, "40 min"]
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Goma conductiva botones", 250, "10 min", "membrana"],
+    ["Bumper LB y RB", 250, "5 min", "lb_l1,rb_r1"],
+    ["Microswich LB y RB", 250, "15 min", "lb_l1,rb_r1"],
+    ["Mantenimiento Completo y Limpieza", 200, "30 min", "flex_principal"],
+    ["Falla en Palancas Traseras (Paddles)", 300, "40 min", "flex_principal"]
 ],
 "Control PS4 (DualShock 4)":[
-    ["Joystick", 300, "10 min"],
-    ["Joystick TMR", 450, "10 min"],
-    ["Membrana de botones", 300, "20 min"],
-    ["Goma condutivas", 200, "10 min"],
-    ["Gatillo aptico", 450, "1 hr"],
-    ["Flex gatillo", 300, "5 min"],
-    ["Centro de carga tipo C", 300, "30 min"],
-    ["Puerto audífonos", 300, "15 min"],
-    ["Pmic", 600, "1 hr"],
-    ["Corto en placa", 500, "2 hrs"]
+    ["Joystick", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Membrana de botones", 300, "20 min", "flex_principal"],
+    ["Goma condutivas", 200, "10 min", "membrana"],
+    ["Gatillo aptico", 450, "1 hr", "lt_l2,rt_r2"],
+    ["Flex gatillo", 300, "5 min", "lt_l2,rt_r2"],
+    ["Centro de carga tipo C", 300, "30 min", "puerto_usbc"],
+    ["Puerto audífonos", 300, "15 min", "flex_principal"],
+    ["Pmic", 600, "1 hr", "flex_principal"],
+    ["Corto en placa", 500, "2 hrs", "flex_principal"]
 ],
 "Control PS5 DualSense":[
-    ["Joystick", 300, "10 min"],
-    ["Joystick TMR", 450, "10 min"],
-    ["Membrana de botones", 250, "20 min"],
-    ["Goma conductiva", 200, "10 min"],
-    ["Motor adaptativo", 450, "1 hr"],
-    ["Motor aptico", 450, "1 hr"],
-    ["Gatillo aptico", 450, "1 hr"],
-    ["Flex gatillo", 300, "5 min"],
-    ["Centro de carga tipo C", 300, "30 min"],
-    ["Jack de audífonos", 300, "15 min"],
-    ["Pmic", 650, "1 hr"],
-    ["Corto en placa", 500, "2 hrs"]
+    ["Joystick", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Membrana de botones", 250, "20 min", "flex_principal"],
+    ["Goma conductiva", 200, "10 min", "membrana"],
+    ["Motor adaptativo", 450, "1 hr", "motor_gatillo_l2,motor_gatillo_r2"],
+    ["Motor aptico", 450, "1 hr", "actuador_haptico"],
+    ["Gatillo aptico", 450, "1 hr", "lt_l2,rt_r2"],
+    ["Flex gatillo", 300, "5 min", "lt_l2,rt_r2"],
+    ["Centro de carga tipo C", 300, "30 min", "puerto_usbc"],
+    ["Jack de audífonos", 300, "15 min", "flex_principal"],
+    ["Pmic", 650, "1 hr", "flex_principal"],
+    ["Corto en placa", 500, "2 hrs", "flex_principal"]
 ],
 "Control PS5 DualSense Edge":[
-    ["Joystick original", 450, "10 min"],
-    ["Joystick TMR", 600, "10 min"],
-    ["Gatillo adaptative", 700, "1 hr"],
-    ["Motor adaptativo", 700, "1 hr"],
-    ["Motor haptico", 450, "30 min"],
-    ["Membrana de botones", 500, "1 hr"],
-    ["Jack de audífonos", 450, "45 min"],
-    ["Pmic", 1500, "1 hr"]
+    ["Joystick original", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 600, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Gatillo adaptative", 700, "1 hr", "lt_l2,rt_r2,motor_gatillo_l2,motor_gatillo_r2"],
+    ["Motor adaptativo", 700, "1 hr", "motor_gatillo_l2,motor_gatillo_r2"],
+    ["Motor haptico", 450, "30 min", "actuador_haptico"],
+    ["Membrana de botones", 500, "1 hr", "flex_principal"],
+    ["Jack de audífonos", 450, "45 min", "flex_principal"],
+    ["Pmic", 1500, "1 hr", "flex_principal"]
 ],
 "Nintendo Switch (Joy-Con)":[
-    ["Joystick original", 300, "10 min"],
-    ["Joystick TMR", 450, "10 min"],
-    ["Flex vinculación inalámbrica", 350, "10 min"],
-    ["Riel", 400, "10 min"],
-    ["Batería", 400, "5 min"],
-    ["Carcasa", 280, "20 min"]
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Flex vinculación inalámbrica", 350, "10 min", "flex_principal"],
+    ["Riel", 400, "10 min", "flex_principal"],
+    ["Batería", 400, "5 min", "bateria"],
+    ["Carcasa", 280, "20 min", "flex_principal"]
 ],
 "Nintendo Switch Pro Controller":[
-    ["Joystick original", 300, "10 min"],
-    ["Joystick TMR", 450, "10 min"],
-    ["Puerto de carga", 400, "30 min"],
-    ["Goma conductiva", 300, "15 min"],
-    ["Corto en placa", 450, "2 hrs"]
+    ["Joystick original", 300, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Joystick TMR", 450, "10 min", "joystick_izq,joystick_der,potenciometro_izq,potenciometro_der"],
+    ["Puerto de carga", 400, "30 min", "puerto_usbc"],
+    ["Goma conductiva", 300, "15 min", "membrana"],
+    ["Corto en placa", 450, "2 hrs", "flex_principal"]
 ]
 };
 
@@ -400,12 +483,34 @@ const imagenes = {
 "Nintendo Switch Pro Controller":"pro-controller.png"
 }; 
 
+// Mapeos técnicos universales para descripciones del Bonus expandido
+const HOTSPOT_META_INFO = {
+    "joystick_izq": { name: "Joystick Izquierdo", desc: "Mecanismo analógico completo. Corrige desviaciones no deseadas o tirones en el juego." },
+    "joystick_der": { name: "Joystick Derecho", desc: "Mecanismo analógico completo. Restaura el centrado y suavidad de la cámara de juego." },
+    "potenciometro_izq": { name: "Potenciómetro Izquierdo", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y izquierdo." },
+    "potenciometro_der": { name: "Potenciómetro Derecho", desc: "Sensores cilíndricos internos encargados de registrar el movimiento del eje X/Y derecho." },
+    "puerto_usbc": { name: "Puerto de Carga / USB-C", desc: "Puerto físico reforzado. Elimina falsos contactos al energizar o sincronizar el control." },
+    "dpad": { name: "D-Pad (Cruceta)", price: 150, desc: "Domos de contacto y cruceta direccional mecánica para una precisión perfecta por pulsación." },
+    "botones_action": { name: "Botones Principales", desc: "Puntos de contacto frontales (A,B,X,Y / Figuras). Resuelve botones pegados o rotos." },
+    "lb_l1": { name: "Bumper / Interruptor L1-LB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
+    "rb_r1": { name: "Bumper / Interruptor R1-RB", desc: "Microswitch interno táctil superior. Devuelve la pulsación elástica e inmediata." },
+    "lt_l2": { name: "Gatillo Lineal L2-LT", desc: "Sensor magnético de recorrido lineal o potenciómetro mecánico según la arquitectura del mando." },
+    "rt_r2": { name: "Gatillo Lineal R2-RT", desc: "Sensor magnético de recorrido lineal o potenciómetro mecánico según la arquitectura del mando." },
+    "home_btn": { name: "Botón Home / Guía", desc: "Módulo central de encendido e iluminación LED decorativa o indicadora." },
+    "touchpad": { name: "Panel Touchpad Central", desc: "Superficie táctil digital capacitiva y flex conector intermedio exclusivo de Sony." },
+    "bateria": { name: "Batería / Gestión de Energía", desc: "Celda de Litio recargable o pines estructurales de alimentación primaria." },
+    "actuador_haptico": { name: "Actuador Háptico HD", desc: "Motores avanzados de vibración de bobina por software lineal de alta fidelidad." },
+    "motor_gatillo_l2": { name: "Motor Adaptativo Izquierdo", desc: "Engranaje interno y motor de fuerza variable para simular tensión real en el gatillo." },
+    "motor_gatillo_r2": { name: "Motor Adaptativo Derecho", desc: "Engranaje interno y motor de fuerza variable para simular tensión real en el gatillo." },
+    "membrana": { name: "Membrana de Silicón Conductivo", desc: "Almohadillas elásticas intermedias que devuelven el rebote físico original de los botones." },
+    "flex_principal": { name: "Placa Base / Flex Principal", desc: "Estructura interna, circuitos lógicos integrados, PMIC y líneas de datos generales." }
+};
+
 let m=document.getElementById("mando");
 let containerServicios=document.getElementById("serviciosContainer");
 let descuentoRow=document.getElementById("descuentoRow");
 let descuentoMonto=document.getElementById("descuentoMonto");
 
-// Variable global para capturar si se aplicó descuento para el mensaje de WA
 let promoAplicadaText = "";
 
 Object.keys(data).forEach(x=>{
@@ -417,81 +522,4 @@ Object.keys(data).forEach(x=>{
 
 loadServices();
 
-function loadServices(){
-    const targetImg = document.getElementById("mandoImg");
-    targetImg.style.opacity = 0;
-    targetImg.style.transform = "scale(0.9)";
-    setTimeout(() => {
-        targetImg.src=imagenes[m.value]; 
-        targetImg.style.opacity = 1;
-        targetImg.style.transform = "scale(1)";
-    }, 150);
-
-    containerServicios.innerHTML="";
-    data[m.value].forEach((x, index)=>{
-        let div = document.createElement("div");
-        div.className = "service-item";
-        div.innerHTML = `
-            <input type="checkbox" id="srv_${index}" value="${x[0]}" onchange="calc()">
-            <label for="srv_${index}" class="service-details">
-                <span class="service-name">${x[0]}</span>
-                <span class="service-price">$${x[1]}</span>
-            </label>
-        `;
-        containerServicios.appendChild(div);
-    });
-    calc();
-}
-
-function calc(){
-    let totalDinero = 0;
-    let listaTiempos = [];
-    
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
-    
-    checkboxes.forEach(cb => {
-        let elementoData = data[m.value].find(x => x[0] === cb.value);
-        if(elementoData) {
-            totalDinero += elementoData[1];
-            listaTiempos.push(elementoData[2]);
-        }
-    });
-
-    precio.innerText = "$" + totalDinero;
-
-    // LÓGICA DE DESCUENTO DEL 10% SUPERANDO LOS $460 PESOS
-    if(totalDinero > 460) {
-        let ahorro = Math.round(totalDinero * 0.10);
-        let precioFinal = totalDinero - ahorro;
-        
-        descuentoRow.style.display = "block";
-        descuentoMonto.innerText = "-$" + ahorro;
-        total.innerText = "$" + precioFinal;
-        promoAplicadaText = `\n🎁 Descuento 10%: -$${ahorro} (Súpero los $460)`;
-    } else {
-        descuentoRow.style.display = "none";
-        total.innerText = "$" + totalDinero;
-        promoAplicadaText = "";
-    }
-
-    if(listaTiempos.length > 0) {
-        tiempo.innerText = listaTiempos.join(" + ");
-    } else {
-        tiempo.innerText = "-";
-    }
-}
-
-function sendWA(){
-    let serviciosSeleccionados = [];
-    const checkboxes = containerServicios.querySelectorAll('input[type="checkbox"]:checked');
-    checkboxes.forEach(cb => serviciosSeleccionados.push(cb.value));
-
-    let srvTexto = serviciosSeleccionados.length > 0 ? serviciosSeleccionados.join(", ") : "Ninguno seleccionado";
-
-    let msg=`🎮 XE SERVICIO ELECTRÓNICO\n¼ DESCUENTO DE CONTROL APLICADO\n\n👤 Cliente: ${cliente.value}\n🎮 Mando: ${m.value}\n🔧 Fallas: ${srvTexto}\n\n💰 Subtotal: ${precio.innerText}${promoAplicadaText}\n💵 NETO A PAGAR: ${total.innerText}\n⏱ Tiempo Combinado: ${tiempo.innerText}\n\n📝 Notas: ${obs.value}`;
-    window.open("https://wa.me/527471731852?text="+encodeURIComponent(msg));
-}
-</script>
-
-</body>
-</html>
+// Genera plantill
